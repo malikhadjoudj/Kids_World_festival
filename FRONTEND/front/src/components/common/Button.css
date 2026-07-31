@@ -1,0 +1,132 @@
+/* ============================================
+   Button Component Styles
+   ============================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition:
+    background var(--transition-base),
+    transform var(--transition-fast),
+    box-shadow var(--transition-base);
+  white-space: nowrap;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 50%
+  );
+}
+
+.btn:hover::after {
+  opacity: 1;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* -- Sizes -- */
+.btn--sm {
+  padding: var(--space-sm) var(--space-lg);
+  font-size: var(--fs-sm);
+}
+
+.btn--md {
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--fs-base);
+}
+
+.btn--lg {
+  padding: var(--space-md) var(--space-2xl);
+  font-size: var(--fs-lg);
+}
+
+/* -- Primary -- */
+.btn--primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: var(--color-text-light);
+  box-shadow: var(--shadow-glow-primary);
+}
+
+.btn--primary:hover {
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  box-shadow: 0 12px 35px rgba(255, 107, 53, 0.45);
+  transform: translateY(-2px);
+}
+
+/* -- Secondary -- */
+.btn--secondary {
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-secondary-dark));
+  color: var(--color-text-light);
+  box-shadow: var(--shadow-md);
+}
+
+.btn--secondary:hover {
+  background: linear-gradient(135deg, var(--color-secondary-light), var(--color-secondary));
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* -- Outline -- */
+.btn--outline {
+  background: transparent;
+  color: var(--color-text-light);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.btn--outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.7);
+  transform: translateY(-2px);
+}
+
+/* -- Outline Dark -- */
+.btn--outline-dark {
+  background: transparent;
+  color: var(--color-secondary);
+  border: 2px solid var(--color-border);
+}
+
+.btn--outline-dark:hover {
+  background: var(--color-secondary);
+  color: var(--color-text-light);
+  border-color: var(--color-secondary);
+  transform: translateY(-2px);
+}
+
+/* -- Accent -- */
+.btn--accent {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
+  color: var(--color-secondary-dark);
+  box-shadow: var(--shadow-glow-accent);
+}
+
+.btn--accent:hover {
+  box-shadow: 0 12px 35px rgba(255, 209, 102, 0.45);
+  transform: translateY(-2px);
+}
+
+/* -- Icon -- */
+.btn__icon {
+  display: flex;
+  align-items: center;
+  font-size: 1.1em;
+}

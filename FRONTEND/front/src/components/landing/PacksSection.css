@@ -1,0 +1,213 @@
+/* ============================================
+   Packs Section Styles
+   ============================================ */
+
+.packs {
+  padding: var(--space-section) 0;
+  background: var(--color-bg-light);
+}
+
+/* Grid */
+.packs__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  align-items: stretch;
+}
+
+/* Card */
+.pack-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  border: 2px solid transparent;
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.pack-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Popular card */
+.pack-card--popular {
+  border-color: var(--color-accent);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 209, 102, 0.05) 0%,
+    var(--color-bg-card) 30%
+  );
+  transform: scale(1.03);
+  z-index: 2;
+}
+
+.pack-card--popular:hover {
+  transform: scale(1.03) translateY(-8px);
+}
+
+.pack-card__badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--space-xs) var(--space-lg);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
+  color: var(--color-secondary-dark);
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  box-shadow: var(--shadow-glow-accent);
+}
+
+/* Header */
+.pack-card__header {
+  text-align: center;
+  margin-bottom: var(--space-md);
+}
+
+.pack-card__icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: var(--space-sm);
+}
+
+.pack-card__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--color-secondary);
+  margin-bottom: var(--space-md);
+}
+
+.pack-card__price {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin-bottom: var(--space-xs);
+}
+
+.pack-card__price-value {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  color: var(--color-primary);
+}
+
+.pack-card__price-unit {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.pack-card__surface {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-bg-cream);
+  border-radius: var(--radius-sm);
+}
+
+/* Divider */
+.pack-card__divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--space-lg) 0;
+}
+
+/* Features */
+.pack-card__features {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.pack-card__feature {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+  line-height: var(--lh-snug);
+}
+
+.pack-card__feature-check {
+  color: var(--color-success);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-sm);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Action */
+.pack-card__action {
+  margin-top: auto;
+}
+
+.pack-card__btn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Note */
+.packs__note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-2xl);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-bg-cream);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--color-accent);
+}
+
+.packs__note-icon {
+  font-size: var(--fs-xl);
+  flex-shrink: 0;
+}
+
+.packs__note p {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  line-height: var(--lh-normal);
+}
+
+.packs__note strong {
+  color: var(--color-text);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .packs__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pack-card--popular {
+    transform: scale(1);
+  }
+
+  .pack-card--popular:hover {
+    transform: translateY(-8px);
+  }
+}
+
+@media (max-width: 600px) {
+  .packs__grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
