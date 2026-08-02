@@ -1,12 +1,14 @@
 import { PACKS, DROITS_INTERVENTION } from '../../constants/packs';
-import { STATUT_LABELS } from '../../data/mockExposants';
+import { getStatutLabel } from '../../constants/admin';
+import { getAssetUrl } from '../../services/api';
 import './ExposantPreviewModal.css';
 
 function ExposantPreviewModal({ exposant, onClose }) {
   if (!exposant) return null;
 
-  const pack = PACKS.find((p) => p.id === exposant.packId);
-  const statut = STATUT_LABELS[exposant.statutContrat];
+  const pack = exposant.pack || PACKS.find((p) => p.id === exposant.packId);
+  const statut = getStatutLabel(exposant.statutContrat);
+  const documentUrl = getAssetUrl(exposant.documentUrl);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -121,6 +123,33 @@ function ExposantPreviewModal({ exposant, onClose }) {
             </div>
           </div>
         )}
+
+        {/* Documents */}
+        <div className="preview-modal__section">
+          <h3>Documents de l'exposant</h3>
+          {exposant.hasUploadedDocuments ? (
+            <div className="preview-modal__document-card">
+              <span className="preview-modal__document-icon">📄</span>
+              <div className="preview-modal__document-info">
+                <strong>Bon de commande & Règlement</strong>
+                <span>Document signé et cacheté (PDF)</span>
+              </div>
+              <a 
+                href={documentUrl || '#'} 
+                target="_blank" 
+                rel="noreferrer"
+                className="preview-modal__document-download"
+                download
+              >
+                📥 Voir
+              </a>
+            </div>
+          ) : (
+            <div className="preview-modal__document-empty">
+              Aucun document signé n'a été déposé pour le moment.
+            </div>
+          )}
+        </div>
 
         {/* Note */}
         <div className="preview-modal__note">

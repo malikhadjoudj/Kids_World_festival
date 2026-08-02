@@ -121,6 +121,27 @@
   box-shadow: 0 0 0 3px var(--color-primary-glow);
 }
 
+.form-group input.input-error {
+  border-color: #dc3545;
+  background-color: #fff5f5;
+}
+
+.field-error {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.order-summary__error {
+  margin-bottom: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  background: #fff5f5;
+  border: 1px solid #f5c2c7;
+  color: #b42318;
+  font-size: 0.95rem;
+}
+
 /* Summary Container */
 .order-summary {
   background: var(--color-bg-card);
@@ -257,4 +278,15 @@
   .order-form-container {
     padding: var(--space-lg);
   }
+}
+
+.order-summary__error {
+  padding: 0.75rem 1rem;
+  background: rgba(255, 59, 48, 0.1);
+  border: 1px solid rgba(255, 59, 48, 0.3);
+  border-radius: 8px;
+  color: #d32f2f;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
 }

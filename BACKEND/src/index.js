@@ -1,0 +1,368 @@
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const { PrismaClient } = require('@prisma/client');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+const app = express();
+const prisma = new PrismaClient();
+const port = process.env.PORT || 3000;
+
+const normalizePackIds = (value, fallbackPackId) => {
+  const rawIds = Array.isArray(value)
+    ? value.flatMap((id) => String(id).split(','))
+    : typeof value === 'string'
+      ? value.split(',')
+      : [];
+
+  const ids = rawIds.map((id) => id.trim()).filter(Boolean);
+  if (ids.length === 0 && fallbackPackId) ids.push(fallbackPackId);
+
+  return [...new Set(ids)].join(',');
+};
+
+const hasValue = (value) => value !== undefined && value !== null && String(value).trim() !== '';
+
+const validateExposantData = (data, { requireAll = false } = {}) => {
+  const errors = {};
+  const requiredFields = ['nomPrenom', 'fonction', 'raisonSociale', 'adresse', 'tel', 'contact', 'email', 'rc', 'nif', 'art', 'nis', 'activite'];
+
+  for (const field of requiredFields) {
+    const value = data[field];
+    if (requireAll && !hasValue(value)) {
+      errors[field] = 'Ce champ est obligatoire.';
+      continue;
+    }
+
+    if (!hasValue(value)) continue;
+
+    const trimmed = String(value).trim();
+
+    switch (field) {
+      case 'email':
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+          errors[field] = 'Veuillez saisir une adresse e-mail valide.';
+        }
+        break;
+      case 'tel':
+        if (!/^\d{10}$/.test(trimmed)) {
+          errors[field] = 'Le téléphone doit contenir exactement 10 chiffres.';
+        }
+        break;
+      case 'rc':
+        if (trimmed.length < 16) {
+          errors[field] = `Il manque ${16 - trimmed.length} caractère(s).`;
+        } else if (trimmed.length > 16) {
+          errors[field] = 'Le RC doit contenir exactement 16 caractères.';
+        }
+        break;
+      case 'nif':
+        if (!/^\d{20}$/.test(trimmed)) {
+          errors[field] = 'Le NIF doit contenir exactement 20 chiffres.';
+        }
+        break;
+      case 'art':
+        if (!/^\d{11}$/.test(trimmed)) {
+          errors[field] = 'L’ART doit contenir exactement 11 chiffres.';
+        }
+        break;
+      case 'nis':
+        if (!/^\d{15}$/.test(trimmed)) {
+          errors[field] = 'Le NIS doit contenir exactement 15 chiffres.';
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  return errors;
+};
+
+app.use(cors());
+app.use(express.json());
+
+// ─── Static uploads (local for now) ───────────────────────
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+app.use('/uploads', express.static(uploadsDir));
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const exposantDir = path.join(uploadsDir, req.params.id);
+    if (!fs.existsSync(exposantDir)) fs.mkdirSync(exposantDir, { recursive: true });
+    cb(null, exposantDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, `document_signe_${Date.now()}.pdf`);
+  }
+});
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'application/pdf') cb(null, true);
+    else cb(new Error('Seuls les fichiers PDF sont acceptés.'));
+  }
+});
+
+// ─── PACKS ────────────────────────────────────────────────
+
+app.get('/api/packs', async (req, res) => {
+  try {
+    const packs = await prisma.pack.findMany();
+    res.json(packs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible de récupérer les packs.' });
+  }
+});
+
+// ─── STANDS ───────────────────────────────────────────────
+
+app.get('/api/stands', async (req, res) => {
+  try {
+    const stands = await prisma.stand.findMany();
+    res.json(stands);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible de récupérer les stands.' });
+  }
+});
+
+app.patch('/api/stands/:id', async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  try {
+    const stand = await prisma.stand.update({ where: { id }, data: { status } });
+    res.json(stand);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible de modifier le stand.' });
+  }
+});
+
+// ─── EXPOSANTS ────────────────────────────────────────────
+
+// GET all exposants
+app.get('/api/exposants', async (req, res) => {
+  try {
+    const exposants = await prisma.exposant.findMany({
+      include: { pack: true, stand: true },
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json(exposants);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible de récupérer les exposants.' });
+  }
+});
+
+// GET single exposant
+app.get('/api/exposants/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const exposant = await prisma.exposant.findUnique({
+      where: { id },
+      include: { pack: true, stand: true }
+    });
+    if (!exposant) return res.status(404).json({ error: 'Exposant introuvable.' });
+    res.json(exposant);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible de récupérer l\'exposant.' });
+  }
+});
+
+// POST create exposant (soumission du bon de commande)
+app.post('/api/exposants', async (req, res) => {
+  try {
+    const data = req.body;
+    const validationErrors = validateExposantData(data, { requireAll: true });
+
+    if (Object.keys(validationErrors).length > 0) {
+      return res.status(400).json({ error: 'Données invalides.', details: validationErrors });
+    }
+    
+    // Fetch the pack to get its price
+    const pack = await prisma.pack.findUnique({
+      where: { id: data.packId }
+    });
+
+    if (!pack) {
+      return res.status(400).json({ error: 'Pack invalide.' });
+    }
+
+    // Logic for calculating the price
+    let packPrice = pack.price;
+    const DROITS_INTERVENTION = 15000;
+    
+    // If the pack is 'espace-nu', the price might depend on surface. 
+    // Currently the DB sets price = 0 for espace-nu (based on mock data). If it's 12000 DA / m2:
+    if (pack.id === 'espace-nu' && data.surface) {
+      packPrice = parseInt(data.surface) * 12000;
+    }
+
+    const fallbackTotalHT = packPrice + DROITS_INTERVENTION;
+    const fallbackTva = fallbackTotalHT * 0.19;
+    const fallbackTotalTTC = fallbackTotalHT + fallbackTva;
+
+    const submittedTotalHT = Number.parseFloat(data.totalHT);
+    const submittedTva = Number.parseFloat(data.tva);
+    const submittedTotalTTC = Number.parseFloat(data.totalTTC);
+    const totalHT = Number.isFinite(submittedTotalHT) ? submittedTotalHT : fallbackTotalHT;
+    const tva = Number.isFinite(submittedTva) ? submittedTva : fallbackTva;
+    const totalTTC = Number.isFinite(submittedTotalTTC) ? submittedTotalTTC : fallbackTotalTTC;
+    const selectedPackIds = normalizePackIds(data.selectedPackIds || data.packIds, data.packId);
+
+    const exposant = await prisma.exposant.create({
+      data: {
+        nomPrenom: data.nomPrenom,
+        fonction: data.fonction,
+        raisonSociale: data.raisonSociale,
+        adresse: data.adresse,
+        tel: data.tel,
+        contact: data.contact,
+        email: data.email,
+        rc: data.rc,
+        nif: data.nif,
+        art: data.art,
+        nis: data.nis,
+        activite: data.activite,
+        packId: data.packId,
+        selectedPackIds,
+        surface: data.surface ? parseInt(data.surface) : null,
+        totalHT: totalHT,
+        tva: tva,
+        totalTTC: totalTTC,
+      },
+    });
+    res.status(201).json(exposant);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible de créer l\'exposant.' });
+  }
+});
+
+// PATCH update exposant (save document steps)
+app.patch('/api/exposants/:id', async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+
+  try {
+    const validationErrors = validateExposantData(data, { requireAll: false });
+
+    if (Object.keys(validationErrors).length > 0) {
+      return res.status(400).json({ error: 'Données invalides.', details: validationErrors });
+    }
+
+    const exposant = await prisma.exposant.update({
+      where: { id },
+      data: {
+        nomPrenom: data.nomPrenom,
+        fonction: data.fonction,
+        raisonSociale: data.raisonSociale,
+        adresse: data.adresse,
+        tel: data.tel,
+        contact: data.contact,
+        email: data.email,
+        rc: data.rc,
+        nif: data.nif,
+        art: data.art,
+        nis: data.nis,
+        activite: data.activite,
+        packId: data.packId,
+        selectedPackIds:
+          data.selectedPackIds !== undefined || data.packIds !== undefined
+            ? normalizePackIds(data.selectedPackIds || data.packIds, data.packId)
+            : undefined,
+        surface: data.surface !== undefined && data.surface !== null ? parseInt(data.surface) : undefined,
+        totalHT: data.totalHT !== undefined ? parseFloat(data.totalHT) : undefined,
+        tva: data.tva !== undefined ? parseFloat(data.tva) : undefined,
+        totalTTC: data.totalTTC !== undefined ? parseFloat(data.totalTTC) : undefined,
+        documentTarificationNomPrenom: data.documentTarificationNomPrenom,
+        documentTarificationFonction: data.documentTarificationFonction,
+        documentTarificationRaisonSociale: data.documentTarificationRaisonSociale,
+        documentTarificationAdresse: data.documentTarificationAdresse,
+        documentTarificationTel: data.documentTarificationTel,
+        documentTarificationContact: data.documentTarificationContact,
+        documentTarificationEmail: data.documentTarificationEmail,
+        documentTarificationRc: data.documentTarificationRc,
+        documentTarificationNif: data.documentTarificationNif,
+        documentTarificationArt: data.documentTarificationArt,
+        documentTarificationNis: data.documentTarificationNis,
+        documentTarificationActivite: data.documentTarificationActivite,
+        documentParticipationNomPrenom: data.documentParticipationNomPrenom,
+        documentParticipationEntreprise: data.documentParticipationEntreprise,
+      }
+    });
+    res.json(exposant);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible de mettre à jour l\'exposant.' });
+  }
+});
+
+// PATCH update statut contrat (admin)
+app.patch('/api/exposants/:id/statut', async (req, res) => {
+  const { id } = req.params;
+  const { statutContrat } = req.body;
+  try {
+    const exposant = await prisma.exposant.update({
+      where: { id },
+      data: { statutContrat }
+    });
+    res.json(exposant);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible de modifier le statut.' });
+  }
+});
+
+// PATCH assign stand (admin)
+app.patch('/api/exposants/:id/stand', async (req, res) => {
+  const { id } = req.params;
+  const { standId } = req.body;
+  try {
+    const exposant = await prisma.exposant.update({
+      where: { id },
+      data: { standId: standId || null }
+    });
+    res.json(exposant);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible d\'assigner le stand.' });
+  }
+});
+
+// ─── UPLOAD DOCUMENT SIGNÉ ────────────────────────────────
+
+app.post('/api/exposants/:id/documents', upload.single('document'), async (req, res) => {
+  const { id } = req.params;
+  const file = req.file;
+
+  if (!file) return res.status(400).json({ error: 'Aucun fichier reçu.' });
+
+  try {
+    const documentUrl = `/uploads/${id}/${file.filename}`;
+    const exposant = await prisma.exposant.update({
+      where: { id },
+      data: {
+        hasUploadedDocuments: true,
+        documentUrl,
+        statutContrat: 'recu'
+      }
+    });
+    res.json(exposant);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible d\'enregistrer le document.' });
+  }
+});
+
+// ─── SERVER ────────────────────────────────────────────────
+
+app.listen(port, () => {
+  console.log(`✅ Backend API running on http://localhost:${port}`);
+});

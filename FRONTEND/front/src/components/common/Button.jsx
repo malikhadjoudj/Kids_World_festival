@@ -33,7 +33,7 @@ function Button({
   }
 
   return (
-    <button type="button" className={classes} onClick={onClick} {...props}>
+    <button type={props.type || 'button'} className={classes} onClick={onClick} {...props}>
       {icon && <span className="btn__icon">{icon}</span>}
       <span className="btn__label">{children}</span>
     </button>

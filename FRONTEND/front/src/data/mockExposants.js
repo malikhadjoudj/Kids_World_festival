@@ -26,6 +26,8 @@ export const MOCK_EXPOSANTS = [
     tva: 88350,
     totalTTC: 553350,
     dateInscription: '2026-07-15',
+    hasUploadedDocuments: true,
+    documentUrl: '/mock-documents.pdf',
   },
   {
     id: '2',
@@ -49,6 +51,8 @@ export const MOCK_EXPOSANTS = [
     tva: 145350,
     totalTTC: 910350,
     dateInscription: '2026-07-16',
+    hasUploadedDocuments: true,
+    documentUrl: '/mock-documents.pdf',
   },
   {
     id: '3',

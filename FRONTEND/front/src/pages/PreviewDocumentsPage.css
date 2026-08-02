@@ -1,0 +1,378 @@
+.preview-page-wrapper {
+  background: var(--color-bg-alt);
+  min-height: 100vh;
+  padding-bottom: 4rem;
+}
+
+.preview-nav {
+  background: white;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.preview-nav__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.preview-nav__actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.preview-instructions {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 171, 0, 0.1);
+  color: #b27700;
+  text-align: center;
+  font-size: 0.95rem;
+  border-bottom: 1px solid rgba(255, 171, 0, 0.2);
+}
+
+.printable-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+/* Base A4 page style for screen */
+.print-page {
+  background: white;
+  width: 210mm;
+  height: 297mm; /* Fixed height for A4 */
+  padding: 15mm 15mm 40mm; /* Reserve bottom space for signature area */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden; /* Prevent spillover */
+}
+
+/* Bon de commande specific print styles */
+.print-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem 2rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.print-col p {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Invoice Table Styles */
+.invoice-table-container {
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  border: 1px solid #333;
+}
+
+.invoice-table th,
+.invoice-table td {
+  border: 1px solid #333;
+  padding: 0.55rem 0.4rem;
+  text-align: center;
+}
+
+.invoice-table th {
+  background-color: #f5f5f5 !important; /* Light grey */
+  color: #333 !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.col-ref { width: 5%; }
+.col-des { width: 45%; text-align: left !important; }
+.col-qte { width: 10%; }
+.col-pu { width: 20%; text-align: right !important; padding-right: 1rem !important; }
+.col-mnt { width: 20%; text-align: right !important; padding-right: 1rem !important; }
+
+/* Alternating rows removed, simple white background */
+.invoice-table tbody tr {
+  background-color: #ffffff !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.invoice-table tbody tr {
+  height: auto; /* Dynamic height */
+}
+
+.invoice-bottom {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -1px; /* Overlap border */
+}
+
+.invoice-note {
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.invoice-totals {
+  width: 40%;
+  border-left: 1px solid #333;
+}
+
+.invoice-total-row {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #333;
+  border-top: none;
+  border-left: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.invoice-total-row span {
+  padding: 0.5rem 1rem;
+}
+
+.invoice-total-row span:first-child {
+  border-right: 1px solid #333;
+  width: 50%;
+  text-align: left;
+}
+
+.invoice-total-row span:last-child {
+  width: 50%;
+  text-align: right;
+}
+
+.invoice-tva-row {
+  background-color: #ffffff !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.invoice-ttc-row {
+  background-color: #ffffff;
+}
+
+.doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.3rem;
+}
+
+.doc-header__logo-left {
+  flex: 0 0 96px;
+}
+
+.doc-header__logo-right {
+  flex: 1 1 auto;
+  max-width: calc(100% - 112px);
+  min-width: 0;
+  text-align: right;
+}
+
+.edition-badge {
+  width: 90px;
+  height: 90px;
+  border: 3px solid #e8e8e8;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.edition-badge__inner {
+  text-align: center;
+  line-height: 1.2;
+}
+
+.edition-badge__edi {
+  display: block;
+  font-size: 11px;
+  color: #c0392b;
+  font-style: italic;
+}
+
+.edition-badge__edi strong {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.edition-badge__bts {
+  display: block;
+  margin: 2px 0;
+  color: #1a1a1a;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.edition-badge__pencil {
+  font-size: 14px;
+}
+
+.meleven-logo {
+  text-align: right;
+}
+
+.meleven-logo__text {
+  display: block;
+  color: #222;
+  font-family: 'Century Gothic', 'Tw Cen MT', 'Montserrat', sans-serif;
+  font-size: 32px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.meleven-logo__accent {
+  color: inherit;
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+.meleven-logo__sub {
+  display: block;
+  margin-top: 4px;
+  color: #999;
+  font-family: 'Century Gothic', 'Tw Cen MT', 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+.doc-title-section {
+  margin: 0 0 1rem;
+  padding-top: 0.2rem;
+}
+
+.doc-main-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.doc-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.company-info-header {
+  margin-top: 0.7rem;
+  font-size: 0.66rem;
+  color: #555;
+  text-align: right;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.company-info-header p {
+  margin: 0 0 0.08rem;
+}
+
+.print-signatures {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 1.2rem;
+  padding-top: 0.6rem;
+}
+
+.sig-box {
+  flex: 1;
+  min-width: 0;
+}
+
+.sig-box p {
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #333;
+}
+
+.sig-space {
+  height: 32px;
+  border-bottom: 1px solid #cfcfcf;
+  border-radius: 0;
+  background: transparent;
+}
+
+.doc-footer {
+  display: none;
+}
+
+.preview-loading, .preview-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: var(--color-text-light);
+}
+
+.preview-error {
+  color: #d32f2f;
+}
+
+/* ----- PRINT MEDIA QUERY ----- */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .printable-area, .printable-area * {
+    visibility: visible;
+  }
+
+  .printable-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    gap: 0;
+    background: white;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-page {
+    width: 100%;
+    height: 100vh;
+    padding: 15mm;
+    box-shadow: none;
+    page-break-after: always;
+    margin: 0;
+  }
+}

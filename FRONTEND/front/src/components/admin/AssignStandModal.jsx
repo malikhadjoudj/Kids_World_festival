@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MOCK_STANDS, ZONES } from '../../data/mockStands';
+import { ZONES } from '../../data/mockStands';
 import './AssignStandModal.css';
 
 function AssignStandModal({ exposant, stands, assignments, onAssign, onClose }) {
