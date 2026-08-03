@@ -191,8 +191,16 @@
   justify-content: center;
 }
 
+.packs__sponsor-section {
+  margin-top: var(--space-2xl);
+}
+
+.packs__sponsor-section .packs__grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-xl);
+}
+
 .packs__selection-bar {
-  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-lg);

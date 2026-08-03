@@ -124,7 +124,11 @@ app.get('/api/packs', async (req, res) => {
 app.get('/api/stands', async (req, res) => {
   try {
     const stands = await prisma.stand.findMany();
-    res.json(stands);
+    res.json(
+      stands.sort((a, b) =>
+        a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: 'base' })
+      )
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Impossible de récupérer les stands.' });
@@ -133,9 +137,38 @@ app.get('/api/stands', async (req, res) => {
 
 app.patch('/api/stands/:id', async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const { x, y, surface, status, packCompatible } = req.body;
+  const data = {};
+
+  if (x !== undefined) {
+    const parsedX = Number(x);
+    if (!Number.isFinite(parsedX)) {
+      return res.status(400).json({ error: 'Position X invalide.' });
+    }
+    data.x = parsedX;
+  }
+
+  if (y !== undefined) {
+    const parsedY = Number(y);
+    if (!Number.isFinite(parsedY)) {
+      return res.status(400).json({ error: 'Position Y invalide.' });
+    }
+    data.y = parsedY;
+  }
+
+  if (surface !== undefined) {
+    const parsedSurface = Number(surface);
+    if (!Number.isFinite(parsedSurface) || parsedSurface <= 0) {
+      return res.status(400).json({ error: 'Surface invalide.' });
+    }
+    data.surface = parsedSurface;
+  }
+
+  if (status !== undefined) data.status = status;
+  if (packCompatible !== undefined) data.packCompatible = packCompatible;
+
   try {
-    const stand = await prisma.stand.update({ where: { id }, data: { status } });
+    const stand = await prisma.stand.update({ where: { id }, data });
     res.json(stand);
   } catch (error) {
     console.error(error);
@@ -325,14 +358,78 @@ app.patch('/api/exposants/:id/stand', async (req, res) => {
   const { id } = req.params;
   const { standId } = req.body;
   try {
-    const exposant = await prisma.exposant.update({
-      where: { id },
-      data: { standId: standId || null }
+    const updated = await prisma.$transaction(async (tx) => {
+      const currentExposant = await tx.exposant.findUnique({
+        where: { id },
+        select: { id: true, standId: true }
+      });
+
+      if (!currentExposant) {
+        const error = new Error('Exposant introuvable.');
+        error.statusCode = 404;
+        throw error;
+      }
+
+      if (standId) {
+        const stand = await tx.stand.findUnique({ where: { id: standId } });
+        if (!stand) {
+          const error = new Error('Stand introuvable.');
+          error.statusCode = 404;
+          throw error;
+        }
+
+        if (stand.status === 'bloque') {
+          const error = new Error('Ce stand est bloque.');
+          error.statusCode = 409;
+          throw error;
+        }
+
+        const alreadyAssigned = await tx.exposant.findFirst({
+          where: {
+            standId,
+            NOT: { id }
+          }
+        });
+
+        if (alreadyAssigned) {
+          const error = new Error('Ce stand est deja attribue.');
+          error.statusCode = 409;
+          throw error;
+        }
+      }
+
+      const exposant = await tx.exposant.update({
+        where: { id },
+        data: { standId: standId || null },
+        include: { pack: true, stand: true }
+      });
+
+      if (currentExposant.standId && currentExposant.standId !== standId) {
+        const remainingAssignments = await tx.exposant.count({
+          where: { standId: currentExposant.standId }
+        });
+        if (remainingAssignments === 0) {
+          await tx.stand.update({
+            where: { id: currentExposant.standId },
+            data: { status: 'disponible' }
+          });
+        }
+      }
+
+      if (standId) {
+        await tx.stand.update({
+          where: { id: standId },
+          data: { status: 'reserve' }
+        });
+      }
+
+      return exposant;
     });
-    res.json(exposant);
+
+    res.json(updated);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Impossible d\'assigner le stand.' });
+    res.status(error.statusCode || 500).json({ error: error.message || 'Impossible d\'assigner le stand.' });
   }
 });
 

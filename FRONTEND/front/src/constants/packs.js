@@ -6,11 +6,12 @@
 export const DROITS_INTERVENTION = 15000;
 export const TVA_RATE = 0.19;
 export const ESPACE_VENTE_PACK_ID = 'espace-vente';
-export const FORMULE_PACK_IDS = ['standard', 'expo-plus'];
+export const FORMULE_PACK_IDS = ['standard', 'expo-plus', 'pack-italie', 'pack-turquie', 'pack-algerie'];
 
 export const PACKS = [
   {
     id: 'standard',
+    category: 'formule',
     name: 'Formule Standard',
     price: 450000,
     priceLabel: '450 000 DA',
@@ -29,6 +30,7 @@ export const PACKS = [
   },
   {
     id: 'expo-plus',
+    category: 'formule',
     name: 'Formule Expo Plus',
     price: 750000,
     priceLabel: '750 000 DA',
@@ -47,7 +49,64 @@ export const PACKS = [
     popular: true,
   },
   {
+    id: 'pack-italie',
+    category: 'sponsor',
+    name: 'Pack Sponsor Italie',
+    price: 1000000,
+    priceLabel: '1 000 000 DA',
+    surface: 'Activation jusqu’à 60 m²',
+    chapiteau: false,
+    icon: '🇮🇹',
+    color: 'var(--color-tertiary)',
+    features: [
+      'Intégration de votre logo sur le photocall officiel',
+      'Espace d’activation jusqu’à 60 m²',
+      'Diffusion de votre spot sur les écrans géants',
+      'Créneau d’animation sur scène (démonstration, tombola ou jeu concours)',
+    ],
+    popular: false,
+  },
+  {
+    id: 'pack-turquie',
+    category: 'sponsor',
+    name: 'Pack Sponsor Turquie',
+    price: 2200000,
+    priceLabel: '2 200 000 DA',
+    surface: 'Pack visibilité grand format',
+    chapiteau: false,
+    icon: '🇹🇷',
+    color: 'var(--color-warning)',
+    features: [
+      'Panneaux grand format à l’entrée principale',
+      'Pop-Up à l’entrée du festival',
+      'Logo sur la scène principale et panneaux de signalétique',
+      '2 créneaux de 15 min pour animation de marque',
+      'Espace d’exposition de 150 m² + chapiteau de 25 m²',
+    ],
+    popular: false,
+  },
+  {
+    id: 'pack-algerie',
+    category: 'sponsor',
+    name: 'Pack Sponsor Algérie',
+    price: 4500000,
+    priceLabel: '4 500 000 DA',
+    surface: 'Activation Premium éco Park',
+    chapiteau: false,
+    icon: '🇩🇿',
+    color: 'var(--color-danger)',
+    features: [
+      'Animations de marque sur scène avant les spectacles',
+      'Branding exclusif de l’arche d’entrée World Festival Kids',
+      'Pop-Up exclusif à l’entrée du festival',
+      'Habillage des barrières, fanions et allées',
+      'Visibilité premium sur supports de communication et guide officiel',
+    ],
+    popular: false,
+  },
+  {
     id: ESPACE_VENTE_PACK_ID,
+    category: 'option',
     name: 'Espace Vente',
     price: 234000,
     priceLabel: '234 000 DA',
@@ -66,6 +125,7 @@ export const PACKS = [
   },
   {
     id: 'espace-nu',
+    category: 'option',
     name: 'Espace Nu',
     price: 12000,
     priceLabel: '12 000 DA/m2',

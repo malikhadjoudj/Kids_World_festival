@@ -24,6 +24,8 @@ model Stand {
   status          String     @default("disponible") // disponible, reserve, bloque
   packCompatible  String
   surface         Float
+  x               Float?
+  y               Float?
   exposants       Exposant[]
 }
 

@@ -9,7 +9,7 @@ function AssignStandModal({ exposant, stands, assignments, onAssign, onClose }) 
 
   // Filter available stands (not assigned to anyone)
   const assignedStandIds = Object.values(assignments);
-  const availableStands = stands.filter((s) => !assignedStandIds.includes(s.id));
+  const availableStands = stands.filter((s) => !assignedStandIds.includes(s.id) && s.status !== 'bloque');
 
   const handleSubmit = () => {
     if (selectedStand) {

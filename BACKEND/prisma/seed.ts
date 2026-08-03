@@ -50,6 +50,37 @@ const initialPacks = [
   }
 ];
 
+const initialStands = [
+  { id: 'A1', surface: 25, packCompatible: 'all' },
+  { id: 'A2', surface: 25, packCompatible: 'all' },
+  { id: 'A3', surface: 25, packCompatible: 'all' },
+  { id: 'A4', surface: 25, packCompatible: 'all' },
+  { id: 'A5', surface: 25, packCompatible: 'all' },
+  { id: 'A6', surface: 25, packCompatible: 'all' },
+  { id: 'A7', surface: 25, packCompatible: 'all' },
+  { id: 'A8', surface: 25, packCompatible: 'all' },
+  { id: 'A9', surface: 25, packCompatible: 'all' },
+  { id: 'A10', surface: 25, packCompatible: 'all' },
+  { id: 'A11', surface: 25, packCompatible: 'all' },
+  { id: 'A12', surface: 25, packCompatible: 'all' },
+  { id: 'B1', surface: 18, packCompatible: 'all' },
+  { id: 'B2', surface: 18, packCompatible: 'all' },
+  { id: 'B3', surface: 18, packCompatible: 'all' },
+  { id: 'B4', surface: 18, packCompatible: 'all' },
+  { id: 'B5', surface: 18, packCompatible: 'all' },
+  { id: 'B6', surface: 18, packCompatible: 'all' },
+  { id: 'B7', surface: 18, packCompatible: 'all' },
+  { id: 'B8', surface: 18, packCompatible: 'all' },
+  { id: 'B9', surface: 18, packCompatible: 'all' },
+  { id: 'B10', surface: 18, packCompatible: 'all' },
+  { id: 'C1', surface: 50, packCompatible: 'all' },
+  { id: 'C2', surface: 50, packCompatible: 'all' },
+  { id: 'C3', surface: 50, packCompatible: 'all' },
+  { id: 'C4', surface: 50, packCompatible: 'all' },
+  { id: 'C5', surface: 50, packCompatible: 'all' },
+  { id: 'C6', surface: 50, packCompatible: 'all' },
+];
+
 async function main() {
   console.log('Start seeding...');
   for (const p of initialPacks) {
@@ -59,6 +90,14 @@ async function main() {
       create: p,
     });
     console.log(`Created/Updated pack with id: ${pack.id}`);
+  }
+  for (const s of initialStands) {
+    const stand = await prisma.stand.upsert({
+      where: { id: s.id },
+      update: {},
+      create: s,
+    });
+    console.log(`Created/Updated stand with id: ${stand.id}`);
   }
   console.log('Seeding finished.');
 }

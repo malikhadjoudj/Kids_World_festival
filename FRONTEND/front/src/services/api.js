@@ -120,7 +120,23 @@ export const assignStandToExposant = async (exposantId, standId) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ standId }),
   });
-  if (!res.ok) throw new Error('Erreur lors de l\'attribution du stand.');
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Erreur lors de l\'attribution du stand.');
+  }
+  return res.json();
+};
+
+export const updateStand = async (standId, data) => {
+  const res = await fetch(`${API_BASE}/stands/${standId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Erreur lors de la mise à jour du stand.');
+  }
   return res.json();
 };
 

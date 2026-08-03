@@ -175,11 +175,17 @@ function DocumentTarificationPage() {
   const getPackLabel = (selectedPack) => {
     switch (selectedPack.id) {
       case 'standard':
-        return { title: 'FORMULE STANDARD', price: '450 000.00 DA', desc: 'Comprend : la surface + raccordement électrique + 1 table + 2 chaises', surface: 'Chapiteaux disponibles 25 m²' };
+        return { title: 'FORMULE STANDARD', price: '450 000,00 DA', desc: 'Comprend : la surface + raccordement électrique + 1 table + 2 chaises', surface: 'Chapiteaux disponibles 25 m²' };
       case 'expo-plus':
-        return { title: 'FORMULE EXPO PLUS', price: '750 000.00 DA', desc: 'Incluant : la surface + raccordement électrique + 1 table + 2 chaises', surface: 'Chapiteaux disponibles 50 m²' };
+        return { title: 'FORMULE EXPO PLUS', price: '750 000,00 DA', desc: 'Incluant : la surface + raccordement électrique + 1 table + 2 chaises', surface: 'Chapiteaux disponibles 50 m²' };
+      case 'pack-italie':
+        return { title: 'PACK SPONSOR ITALIE', price: '1 000 000,00 DA HT', desc: 'Logo sur photocall, espace activation 60 m², spot publicitaire et animation sur scène.', surface: 'Visibilité premium pour votre marque' };
+      case 'pack-turquie':
+        return { title: 'PACK SPONSOR TURQUIE', price: '2 200 000,00 DA HT', desc: 'Grand format publicitaire, Pop-Up d’accueil, scène principale et deux créneaux d’animation.', surface: 'Espace d’exposition 150 m² + chapiteau 25 m²' };
+      case 'pack-algerie':
+        return { title: 'PACK SPONSOR ALGÉRIE', price: '4 500 000,00 DA HT', desc: 'Branding exclusif, Pop-Up d’entrée, habillage des allées et présence sur la communication officielle.', surface: 'Activation premium éco Park' };
       case 'espace-vente':
-        return { title: 'ESPACE VENTE', price: '234 000.00 DA', desc: 'Incluant : la surface + raccordement électrique + 1 table + 2 chaises', surface: 'Chapiteaux disponibles 18 m²' };
+        return { title: 'ESPACE VENTE', price: '234 000,00 DA', desc: 'Incluant : la surface + raccordement électrique + 1 table + 2 chaises', surface: 'Chapiteaux disponibles 18 m²' };
       case 'espace-nu':
         return { title: 'OPTION', price: '', desc: 'Espace nu : 12 000 DA/m²', surface: '' };
       default:
@@ -188,8 +194,12 @@ function DocumentTarificationPage() {
   };
 
   const getLineItemLabel = (lineItem) => {
-    const packLabel = getPackLabel(lineItem.pack);
-    if (!packLabel) return null;
+    const packLabel = getPackLabel(lineItem.pack) || {
+      title: lineItem.pack.name,
+      price: lineItem.pack.priceLabel,
+      desc: '',
+      surface: lineItem.pack.surface || '',
+    };
 
     return {
       ...packLabel,

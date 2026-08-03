@@ -49,7 +49,7 @@ function PackCard({ pack, selected, onToggle }) {
           onClick={() => onToggle(pack.id)}
           className="pack-card__btn"
         >
-          {selected ? 'Retirer' : 'Choisir cette formule'}
+          {selected ? 'Retirer' : 'Choisir ce pack'}
         </Button>
       </div>
     </div>
@@ -63,6 +63,12 @@ function PacksSection() {
   const handleTogglePack = (packId) => {
     setSelectedPackIds((current) => togglePackSelection(current, packId));
   };
+
+  const formulaPackIds = ['standard', 'expo-plus', 'espace-vente', 'espace-nu'];
+  const formulaPacks = formulaPackIds
+    .map((id) => PACKS.find((pack) => pack.id === id))
+    .filter(Boolean);
+  const sponsorPacks = PACKS.filter((pack) => pack.category === 'sponsor');
 
   return (
     <section className="packs" id="formules">
@@ -79,7 +85,7 @@ function PacksSection() {
         </div>
 
         <div className="packs__grid">
-          {PACKS.map((pack) => (
+          {formulaPacks.map((pack) => (
             <PackCard
               key={pack.id}
               pack={pack}
@@ -87,6 +93,29 @@ function PacksSection() {
               onToggle={handleTogglePack}
             />
           ))}
+        </div>
+
+        <div className="packs__sponsor-section">
+          <div className="section-header">
+            <span className="section-badge">🚀 Nos Packs Sponsor</span>
+            <h2 className="section-title">
+              Découvrez les offres de sponsoring
+            </h2>
+            <p className="section-subtitle">
+              3 packs sponsor dédiés pour renforcer votre visibilité sur le festival.
+            </p>
+          </div>
+
+          <div className="packs__grid">
+            {sponsorPacks.map((pack) => (
+              <PackCard
+                key={pack.id}
+                pack={pack}
+                selected={selectedPackIds.includes(pack.id)}
+                onToggle={handleTogglePack}
+              />
+            ))}
+          </div>
         </div>
 
         <div className="packs__selection-bar">
@@ -121,7 +150,7 @@ function PacksSection() {
           <span className="packs__note-icon">ℹ️</span>
           <p>
             <strong>Droits d'intervention obligatoires :</strong>{' '}
-            {DROITS_INTERVENTION.toLocaleString('fr-DZ')} DA, appliqués en sus de chaque formule.
+            {DROITS_INTERVENTION.toLocaleString('fr-DZ')} DA, appliqués en sus de chaque offre.
           </p>
         </div>
       </div>
