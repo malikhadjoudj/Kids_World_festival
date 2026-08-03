@@ -5,7 +5,7 @@ const { PrismaClient } = require('@prisma/client');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-
+const { sendAdminNotification } = require('./mailer');
 const app = express();
 const prisma = new PrismaClient();
 const port = process.env.PORT || 3000;
@@ -271,6 +271,7 @@ app.post('/api/exposants', async (req, res) => {
         totalTTC: totalTTC,
       },
     });
+    sendAdminNotification(exposant, 'inscription');
     res.status(201).json(exposant);
   } catch (error) {
     console.error(error);
@@ -451,6 +452,7 @@ app.post('/api/exposants/:id/documents', upload.single('document'), async (req, 
         statutContrat: 'recu'
       }
     });
+    sendAdminNotification(exposant, 'documents');
     res.json(exposant);
   } catch (error) {
     console.error(error);

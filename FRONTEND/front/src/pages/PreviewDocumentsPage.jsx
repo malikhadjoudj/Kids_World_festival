@@ -250,11 +250,7 @@ function PreviewDocumentsPage() {
 
           <div className="print-signatures">
             <div className="sig-box">
-              <p>Cachet et Signature de l'exposant</p>
-              <div className="sig-space"></div>
-            </div>
-            <div className="sig-box">
-              <p>Cachet et Signature de l'organisateur</p>
+              <p>Cachet et Signature </p>
               <div className="sig-space"></div>
             </div>
           </div>

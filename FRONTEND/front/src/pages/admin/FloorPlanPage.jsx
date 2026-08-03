@@ -48,7 +48,7 @@ function FloorPlanPage() {
   const svgRef = useRef(null);
   const movedDuringDragRef = useRef(false);
   const suppressNextClickRef = useRef(false);
-
+  const pendingSavesRef = useRef({});
   const CX = 350;
   const CY = 320;
   const ringRadii = { outer: 260, middle: 190, inner: 110 };
@@ -64,7 +64,7 @@ function FloorPlanPage() {
   const occupiedCount = Object.keys(standToExposant).length;
 
   const getStandPosition = (stand) => {
-    if (stand.x !== undefined && stand.y !== undefined) {
+    if (stand.x !== undefined && stand.x !== null && stand.y !== undefined && stand.y !== null) {
       return { x: stand.x, y: stand.y };
     }
 
@@ -78,8 +78,12 @@ function FloorPlanPage() {
 
   const getStandSize = (stand) => {
     const surface = Number(stand.surface) || 10;
-    const side = 20 + Math.sqrt(surface) * 3.5;
-    return Math.max(24, Math.min(90, side));
+    const width = 20 + Math.sqrt(surface) * 5;
+    const height = 20 + Math.sqrt(surface) * 1.4;
+    return {
+      width: Math.max(24, Math.min(150, width)),
+      height: Math.max(20, Math.min(50, height)),
+    };
   };
 
   const toSvgPoint = (clientX, clientY) => {
@@ -91,6 +95,23 @@ function FloorPlanPage() {
     const matrix = svg.getScreenCTM();
     if (!matrix) return { x: clientX, y: clientY };
     return pt.matrixTransform(matrix.inverse());
+  };
+  const saveStandUpdate = async (standId, data) => {
+    const pending = pendingSavesRef.current;
+    pending[standId] = data;
+
+    if (pending[`${standId}__inFlight`]) return;
+    pending[`${standId}__inFlight`] = true;
+
+    try {
+      while (pending[standId]) {
+        const toSend = pending[standId];
+        delete pending[standId];
+        await updateStand(standId, toSend);
+      }
+    } finally {
+      delete pending[`${standId}__inFlight`];
+    }
   };
 
   const handlePointerDown = (event, standId) => {
@@ -104,7 +125,7 @@ function FloorPlanPage() {
     movedDuringDragRef.current = false;
     setDraggingStand(standId);
     setDragOffset({ x: point.x - pos.x, y: point.y - pos.y });
-    setSelectedStand(standId);
+    
   };
 
   const handlePointerMove = (event) => {
@@ -135,11 +156,11 @@ function FloorPlanPage() {
     setDraggingStand(null);
     try {
       setIsSaving(true);
-      await updateStand(stand.id, {
-        x: stand.x,
-        y: stand.y,
-        surface: stand.surface,
-      });
+     await saveStandUpdate(stand.id, {
+  x: stand.x,
+  y: stand.y,
+  surface: stand.surface,
+});
       setMessage('Position et taille du stand mises à jour.');
     } catch (err) {
       console.error(err);
@@ -167,11 +188,11 @@ function FloorPlanPage() {
 
     try {
       setIsSaving(true);
-      await updateStand(stand.id, {
-        x: stand.x,
-        y: stand.y,
-        surface: stand.surface,
-      });
+     await saveStandUpdate(stand.id, {
+  x: stand.x,
+  y: stand.y,
+  surface: stand.surface,
+});
       setMessage('Stand enregistré avec succès.');
     } catch (err) {
       console.error(err);
@@ -288,53 +309,56 @@ function FloorPlanPage() {
               </text>
 
               {stands.map((stand) => {
-                const pos = getStandPosition(stand);
-                const size = getStandSize(stand);
-                const exposant = standToExposant[stand.id];
-                const color = exposant ? PACK_COLORS[exposant.packId] || '#ccc' : '#e0e0e0';
-                const isOccupied = Boolean(exposant);
-                const isSelected = selectedStand === stand.id;
+  const pos = getStandPosition(stand);
+  const { width, height } = getStandSize(stand);
+  const exposant = standToExposant[stand.id];
+  const color = exposant ? PACK_COLORS[exposant.packId] || '#ccc' : '#e0e0e0';
+  const isOccupied = Boolean(exposant);
+  const isSelected = selectedStand === stand.id;
+  const rotation = stand.angle || 0;
 
-                return (
-                  <g
-                    key={stand.id}
-                    className={`floor-plan__stand ${isOccupied ? 'floor-plan__stand--occupied' : 'floor-plan__stand--free'} ${isSelected ? 'floor-plan__stand--selected' : ''}`}
-                    onPointerDown={(e) => handlePointerDown(e, stand.id)}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (suppressNextClickRef.current) {
-                        suppressNextClickRef.current = false;
-                        return;
-                      }
-                      setSelectedStand(isSelected ? null : stand.id);
-                    }}
-                    style={{ cursor: 'grab' }}
-                  >
-                    <rect
-                      x={pos.x - size / 2}
-                      y={pos.y - size / 2}
-                      width={size}
-                      height={size}
-                      rx={6}
-                      fill={color}
-                      stroke={isSelected ? '#0B2545' : 'rgba(0,0,0,0.1)'}
-                      strokeWidth={isSelected ? 3 : 1}
-                      opacity={isOccupied ? 1 : 0.55}
-                    />
-                    <text
-                      x={pos.x}
-                      y={pos.y + 1}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill={isOccupied ? '#fff' : '#666'}
-                      fontSize="10"
-                      fontWeight="600"
-                      fontFamily="var(--font-display)"
-                    >
-                      {stand.id}
-                    </text>
-                  </g>
-                );
+  return (
+    <g
+      key={stand.id}
+      className={`floor-plan__stand ${isOccupied ? 'floor-plan__stand--occupied' : 'floor-plan__stand--free'} ${isSelected ? 'floor-plan__stand--selected' : ''}`}
+      onPointerDown={(e) => handlePointerDown(e, stand.id)}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (suppressNextClickRef.current) {
+          suppressNextClickRef.current = false;
+          return;
+        }
+        setSelectedStand(isSelected ? null : stand.id);
+      }}
+      style={{ cursor: 'grab' }}
+      transform={`translate(${pos.x}, ${pos.y}) rotate(${rotation})`}
+    >
+      <rect
+        x={-width / 2}
+        y={-height / 2}
+        width={width}
+        height={height}
+        rx={6}
+        fill={color}
+        stroke={isSelected ? '#0B2545' : 'rgba(0,0,0,0.1)'}
+        strokeWidth={isSelected ? 3 : 1}
+        opacity={isOccupied ? 1 : 0.55}
+      />
+      <text
+        x={0}
+        y={1}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fill={isOccupied ? '#fff' : '#666'}
+        fontSize="10"
+        fontWeight="600"
+        fontFamily="var(--font-display)"
+        transform={`rotate(${-rotation})`}
+      >
+        {stand.id}
+      </text>
+    </g>
+  );
               })}
             </svg>
           </div>
