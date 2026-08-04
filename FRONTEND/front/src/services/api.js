@@ -176,16 +176,17 @@ export const updateStand = async (standId, data) => {
   return res.json();
 };
 
-export const uploadDocument = async (exposantId, file) => {
+export const uploadDocuments = async (exposantId, documentTarificationFile, documentParticipationFile) => {
   const formData = new FormData();
-  formData.append('document', file);
+  formData.append('documentTarification', documentTarificationFile);
+  formData.append('documentParticipation', documentParticipationFile);
   const res = await fetch(`${API_BASE}/exposants/${exposantId}/documents`, {
     method: 'POST',
     body: formData,
   });
   if (!res.ok) {
     const err = await res.json();
-    throw new Error(err.error || 'Erreur lors de l\'envoi du document.');
+    throw new Error(err.error || 'Erreur lors de l\'envoi des documents.');
   }
   return res.json();
 };
