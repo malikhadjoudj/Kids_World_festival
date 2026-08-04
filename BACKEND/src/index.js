@@ -112,7 +112,7 @@ const storage = multer.diskStorage({
     cb(null, exposantDir);
   },
   filename: (req, file, cb) => {
-    cb(null, `document_signe_${Date.now()}.pdf`);
+    cb(null, `${file.fieldname}_${Date.now()}.pdf`);
   }
 });
 const upload = multer({
@@ -151,7 +151,7 @@ app.get('/api/stands',requireAdmin, async (req, res) => {
   }
 });
 
-app.patch('/api/stands/:id', async (req, res) => {
+app.patch('/api/stands/:id',requireAdmin, async (req, res) => {
   const { id } = req.params;
   const { x, y, surface, status, packCompatible } = req.body;
   const data = {};
@@ -452,29 +452,42 @@ app.patch('/api/exposants/:id/stand', requireAdmin, async (req, res) => {
 
 // ─── UPLOAD DOCUMENT SIGNÉ ────────────────────────────────
 
-app.post('/api/exposants/:id/documents', upload.single('document'), async (req, res) => {
-  const { id } = req.params;
-  const file = req.file;
+app.post(
+  '/api/exposants/:id/documents',
+  upload.fields([
+    { name: 'documentTarification', maxCount: 1 },
+    { name: 'documentParticipation', maxCount: 1 },
+  ]),
+  async (req, res) => {
+    const { id } = req.params;
+    const files = req.files || {};
+    const tarificationFile = files.documentTarification?.[0];
+    const participationFile = files.documentParticipation?.[0];
 
-  if (!file) return res.status(400).json({ error: 'Aucun fichier reçu.' });
+    if (!tarificationFile || !participationFile) {
+      return res.status(400).json({ error: 'Les deux documents (tarification et participation) sont requis.' });
+    }
 
-  try {
-    const documentUrl = `/uploads/${id}/${file.filename}`;
-    const exposant = await prisma.exposant.update({
-      where: { id },
-      data: {
-        hasUploadedDocuments: true,
-        documentUrl,
-        statutContrat: 'recu'
-      }
-    });
-    sendAdminNotification(exposant, 'documents');
-    res.json(exposant);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Impossible d\'enregistrer le document.' });
+    try {
+      const documentTarificationSigneUrl = `/uploads/${id}/${tarificationFile.filename}`;
+      const documentParticipationSigneUrl = `/uploads/${id}/${participationFile.filename}`;
+      const exposant = await prisma.exposant.update({
+        where: { id },
+        data: {
+          hasUploadedDocuments: true,
+          documentTarificationSigneUrl,
+          documentParticipationSigneUrl,
+          statutContrat: 'recu'
+        }
+      });
+      sendAdminNotification(exposant, 'documents');
+      res.json(exposant);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Impossible d\'enregistrer le document.' });
+    }
   }
-});
+);
 
 // ─── SERVER ────────────────────────────────────────────────
 

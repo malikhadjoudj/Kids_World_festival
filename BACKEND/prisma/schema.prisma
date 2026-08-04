@@ -60,8 +60,9 @@ model Exposant {
   
   // Documents
   hasUploadedDocuments Boolean  @default(false)
-  documentUrl          String?
-
+  documentTarificationSigneUrl   String?
+  documentParticipationSigneUrl  String?
+  
   // Document step 1 (surface + tarification)
   documentTarificationNomPrenom String?
   documentTarificationFonction String?
