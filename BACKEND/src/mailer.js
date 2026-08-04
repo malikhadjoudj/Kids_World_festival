@@ -1,6 +1,6 @@
 const { Resend } = require('resend');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 const STATUT_LABELS = {
   en_attente: 'En attente',
@@ -14,7 +14,10 @@ const STATUT_LABELS = {
  */
 async function sendAdminNotification(exposant, event) {
   const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
-
+  if (!resend) {
+    console.warn('⚠️  RESEND_API_KEY non configuré, notification non envoyée.');
+    return;
+  }
   if (!adminEmail) {
     console.warn('⚠️  ADMIN_NOTIFICATION_EMAIL non configuré, notification non envoyée.');
     return;
