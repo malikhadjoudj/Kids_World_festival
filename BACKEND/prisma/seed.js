@@ -7,7 +7,7 @@ const initialPacks = [
     id: 'standard',
     name: 'Formule Standard',
     description: 'Espace aménagé 9m² avec structure modulaire.',
-    price: 465000,
+    price: 450000,
     perSquareMeter: false,
     surface: '9m²',
     icon: '✨'
@@ -16,7 +16,7 @@ const initialPacks = [
     id: 'expo-plus',
     name: 'Formule Expo Plus',
     description: 'Espace aménagé 15m² avec emplacement premium.',
-    price: 765000,
+    price: 750000,
     perSquareMeter: false,
     surface: '15m²',
     icon: '🚀'
@@ -25,7 +25,7 @@ const initialPacks = [
     id: 'espace-vente',
     name: 'Formule Espace Vente',
     description: 'Chapiteau aménagé pour la vente directe.',
-    price: 249000,
+    price: 234000,
     perSquareMeter: false,
     surface: '9m²',
     icon: '🛍️'
@@ -34,7 +34,7 @@ const initialPacks = [
     id: 'espace-nu',
     name: 'Espace Nu',
     description: 'Espace libre à partir de 9m² pour stand personnalisé.',
-    price: 12500,
+    price: 12000,
     perSquareMeter: true,
     surface: 'min 9m²',
     icon: '📐'
@@ -47,6 +47,33 @@ const initialPacks = [
     perSquareMeter: false,
     surface: 'Sur mesure',
     icon: '🍔'
+  },
+  {
+    id: 'pack-italie',
+    name: 'Pack Sponsor Italie',
+    description: 'Intégration logo photocall, espace d\'activation jusqu\'à 60 m², diffusion spot écrans géants, créneau animation scène.',
+    price: 1000000,
+    perSquareMeter: false,
+    surface: 'Activation jusqu\'à 60 m²',
+    icon: '🇮🇹'
+  },
+  {
+    id: 'pack-turquie',
+    name: 'Pack Sponsor Turquie',
+    description: 'Panneaux grand format entrée, Pop-Up, logo scène principale, 2 créneaux animation, 150 m² + chapiteau 25 m².',
+    price: 2200000,
+    perSquareMeter: false,
+    surface: 'Pack visibilité grand format',
+    icon: '🇹🇷'
+  },
+  {
+    id: 'pack-algerie',
+    name: 'Pack Sponsor Algérie',
+    description: 'Animations scène, branding arche entrée, Pop-Up exclusif, habillage barrières/allées, visibilité premium.',
+    price: 4500000,
+    perSquareMeter: false,
+    surface: 'Activation Premium éco Park',
+    icon: '🇩🇿'
   }
 ];
 
