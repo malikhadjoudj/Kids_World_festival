@@ -61,15 +61,15 @@ function Footer() {
               <ul className="footer__col-links">
                 <li>
                   <span className="footer__contact-icon">📧</span>
-                  contact@meleven.dz
+                  Meleven.agency@gmail.com
                 </li>
                 <li>
                   <span className="footer__contact-icon">📱</span>
-                  +213 XX XX XX XX
+                  +213 563053463
                 </li>
                 <li>
                   <span className="footer__contact-icon">📍</span>
-                  Alger, Algérie
+                  Garidi 02 BT 57 GRP 68 SEC 2, LOT 04 PORTE N 04, Alger
                 </li>
               </ul>
             </div>
