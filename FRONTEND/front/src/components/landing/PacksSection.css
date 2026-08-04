@@ -200,6 +200,23 @@
   gap: var(--space-xl);
 }
 
+.packs__sponsor-section .pack-card__features {
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.packs__sponsor-section .pack-card__features::-webkit-scrollbar {
+  width: 5px;
+}
+
+.packs__sponsor-section .pack-card__features::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
 .packs__selection-bar {
   align-items: center;
   justify-content: space-between;
