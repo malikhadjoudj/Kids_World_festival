@@ -21,7 +21,7 @@ function DocumentTarificationPage() {
 
   const [lastPackParam, setLastPackParam] = useState(packId);
   const [selectedPackIds, setSelectedPackIds] = useState(() => normalizePackIds(packId));
-  const surface = searchParams.get('surface') || '';
+  const [surface, setSurface] = useState(searchParams.get('surface') || '');
   const [formData, setFormData] = useState({
     nomPrenom: '',
     fonction: '',
@@ -137,10 +137,11 @@ function DocumentTarificationPage() {
       return;
     }
 
-    if (needsSurface && (!surface || Number.parseInt(surface, 10) < 9)) {
-      setSaveMessage('Veuillez indiquer une surface valide de 9 m2 minimum.');
-      return;
-    }
+   if (needsSurface && (!surface || Number.parseInt(surface, 10) < 9)) {
+  setValidationErrors((prev) => ({ ...prev, surface: 'Surface invalide (9 m² minimum).' }));
+  setSaveMessage('Veuillez indiquer une surface valide de 9 m2 minimum.');
+  return;
+}
 
     setIsSaving(true);
     setSaveMessage('');
@@ -371,6 +372,26 @@ function DocumentTarificationPage() {
               );
             })}
           </div>
+
+          {needsSurface && (
+            <div className="doc-field-row" style={{ marginTop: '1rem' }}>
+              <label className="doc-field-label">Surface souhaitée (m²) :</label>
+              <input
+                className={`doc-field-input ${validationErrors.surface ? 'doc-field-input--error' : ''}`}
+                type="number"
+                min="9"
+                step="1"
+                value={surface}
+                onChange={(e) => {
+                  setSurface(e.target.value);
+                  setValidationErrors((prev) => ({ ...prev, surface: '' }));
+                  setSaveMessage('');
+                }}
+                placeholder="Minimum 9 m²"
+              />
+              {validationErrors.surface && <p className="doc-field-error">{validationErrors.surface}</p>}
+            </div>
+          )}
 
           {/* Footer */}
           <div className="doc-footer">
