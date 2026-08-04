@@ -17,17 +17,17 @@ const STEPS = [
   },
   {
     number: '03',
-    icon: '✍️',
-    title: 'Signez votre contrat',
+    icon: '📝',
+    title: 'Consulter un apercu des contrats',
     description:
-      'Téléchargez le bon de commande pré-rempli, signez-le et déposez-le sur la plateforme.',
+      'Téléchargez le bon de commande et le contrat dutilisation pré-rempli ',
   },
   {
     number: '04',
-    icon: '📍',
-    title: 'Recevez votre emplacement',
+    icon: '✍️',
+    title: 'Signez votre  et déposez votre contrat',
     description:
-      "L'équipe MELEVEN vous attribue votre stand sur le plan de salle. Vous êtes prêt !",
+    "imprimer vos contrat signez les et puis scannez les pour les soumettres a notre équipe",
   },
 ];
 
@@ -39,7 +39,7 @@ function HowItWorks() {
           <span className="section-badge">🔄 Simple & Rapide</span>
           <h2 className="section-title">Comment ça marche ?</h2>
           <p className="section-subtitle">
-            En 4 étapes simples, réservez votre stand au KIDS WORLD FESTIVAL.
+            En 3 étapes simples, réservez votre stand au KIDS WORLD FESTIVAL.
           </p>
         </div>
 

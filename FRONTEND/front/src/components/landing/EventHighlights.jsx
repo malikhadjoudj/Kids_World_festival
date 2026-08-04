@@ -29,9 +29,9 @@ const HIGHLIGHTS = [
 ];
 
 const COUNTERS = [
-  { target: 3, suffix: ' jours', label: "d'événement" },
+  { target: 4, suffix: ' jours', label: "d'événement" },
   { target: 10000, suffix: '+', label: 'visiteurs attendus' },
-  { target: 50, suffix: '+', label: 'marques exposantes' },
+  { target: 3, suffix: '', label: 'Pack Sponsor' },
   { target: 4, suffix: '', label: 'formules adaptées' },
 ];
 

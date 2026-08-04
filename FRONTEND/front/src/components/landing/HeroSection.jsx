@@ -4,7 +4,7 @@ import { EVENT_INFO } from '../../constants/packs';
 import './HeroSection.css';
 
 const STATS = [
-  { value: '50+', label: 'Marques attendues' },
+  { value: '3', label: 'Offre Sponsor' },
   { value: '10 000+', label: 'Visiteurs prévus' },
   { value: '4', label: 'Formules disponibles' },
 ];
