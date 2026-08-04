@@ -1,17 +1,6 @@
-const nodemailer = require('nodemailer');
-const dns = require('dns');
-dns.setDefaultResultOrder('ipv4first');
-// Le transporteur est créé une seule fois et réutilisé pour chaque envoi.
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT) || 587,
-  secure: Number(process.env.SMTP_PORT) === 465, // true pour le port 465, false pour 587/25
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-  family: 4,
-});
+const { Resend } = require('resend');
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const STATUT_LABELS = {
   en_attente: 'En attente',
@@ -58,12 +47,13 @@ async function sendAdminNotification(exposant, event) {
   `;
 
   try {
-    await transporter.sendMail({
-      from: process.env.MAIL_FROM || process.env.SMTP_USER,
+    const { error } = await resend.emails.send({
+      from: process.env.MAIL_FROM || 'onboarding@resend.dev',
       to: adminEmail,
       subject,
       html,
     });
+    if (error) throw new Error(error.message || JSON.stringify(error));
     console.log(`✅ Notification envoyée à ${adminEmail} (${eventLabel})`);
   } catch (error) {
     // On ne bloque jamais la requête principale si l'email échoue.
