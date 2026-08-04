@@ -5,6 +5,8 @@ import LandingPage from './pages/LandingPage';
 import OrderFormPage from './pages/OrderFormPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import FloorPlanPage from './pages/admin/FloorPlanPage';
+import AdminLoginPage from './pages/admin/AdminLoginPage';
+import RequireAdminAuth from './components/admin/RequireAdminAuth';
 import DocumentTarificationPage from './pages/DocumentTarificationPage';
 import DocumentParticipationPage from './pages/DocumentParticipationPage';
 import PreviewDocumentsPage from './pages/PreviewDocumentsPage';
@@ -36,8 +38,9 @@ function App() {
         <Route path="/document-participation" element={<DocumentParticipationPage />} />
         <Route path="/telecharger-documents" element={<PreviewDocumentsPage />} />
         <Route path="/depot-documents" element={<DepositDocumentsPage />} />
-        <Route path="/admin" element={<AdminDashboardPage />} />
-        <Route path="/admin/plan" element={<FloorPlanPage />} />
+       <Route path="/admin/login" element={<AdminLoginPage />} />
+<Route path="/admin" element={<RequireAdminAuth><AdminDashboardPage /></RequireAdminAuth>} />
+<Route path="/admin/plan" element={<RequireAdminAuth><FloorPlanPage /></RequireAdminAuth>} />
       </Routes>
     </div>
   );

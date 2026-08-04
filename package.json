@@ -1,0 +1,22 @@
+{
+  "name": "nouveau-dossier",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/malikhadjoudj/Kids_World_festival.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/malikhadjoudj/Kids_World_festival/issues"
+  },
+  "homepage": "https://github.com/malikhadjoudj/Kids_World_festival#readme",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.1.2"
+  }
+}

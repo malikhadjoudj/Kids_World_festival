@@ -6,6 +6,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { sendAdminNotification } = require('./mailer');
+const { login, requireAdmin } = require('./auth');
 const app = express();
 const prisma = new PrismaClient();
 const port = process.env.PORT || 3000;
@@ -84,6 +85,21 @@ const validateExposantData = (data, { requireAll = false } = {}) => {
 app.use(cors());
 app.use(express.json());
 
+// ─── ADMIN LOGIN ──────────────────────────────────────────
+ 
+app.post('/api/admin/login', (req, res) => {
+  const { username, password } = req.body || {};
+  try {
+    const token = login(username, password);
+    if (!token) {
+      return res.status(401).json({ error: 'Identifiants incorrects.' });
+    }
+    res.json({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message || 'Erreur serveur.' });
+  }
+});
 // ─── Static uploads (local for now) ───────────────────────
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
@@ -121,7 +137,7 @@ app.get('/api/packs', async (req, res) => {
 
 // ─── STANDS ───────────────────────────────────────────────
 
-app.get('/api/stands', async (req, res) => {
+app.get('/api/stands',requireAdmin, async (req, res) => {
   try {
     const stands = await prisma.stand.findMany();
     res.json(
@@ -179,7 +195,7 @@ app.patch('/api/stands/:id', async (req, res) => {
 // ─── EXPOSANTS ────────────────────────────────────────────
 
 // GET all exposants
-app.get('/api/exposants', async (req, res) => {
+app.get('/api/exposants',requireAdmin, async (req, res) => {
   try {
     const exposants = await prisma.exposant.findMany({
       include: { pack: true, stand: true },
@@ -339,7 +355,7 @@ app.patch('/api/exposants/:id', async (req, res) => {
 });
 
 // PATCH update statut contrat (admin)
-app.patch('/api/exposants/:id/statut', async (req, res) => {
+app.patch('/api/exposants/:id/statut', requireAdmin, async (req, res) => {
   const { id } = req.params;
   const { statutContrat } = req.body;
   try {
@@ -355,7 +371,7 @@ app.patch('/api/exposants/:id/statut', async (req, res) => {
 });
 
 // PATCH assign stand (admin)
-app.patch('/api/exposants/:id/stand', async (req, res) => {
+app.patch('/api/exposants/:id/stand', requireAdmin, async (req, res) => {
   const { id } = req.params;
   const { standId } = req.body;
   try {

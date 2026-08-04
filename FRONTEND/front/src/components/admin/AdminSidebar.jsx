@@ -1,7 +1,15 @@
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { adminLogout } from '../../services/api';
 import './AdminSidebar.css';
 
 function AdminSidebar() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    adminLogout();
+    navigate('/admin/login');
+  };
+
   return (
     <aside className="admin-sidebar">
       <div className="admin-sidebar__header">
@@ -41,6 +49,21 @@ function AdminSidebar() {
         <Link to="/" className="admin-sidebar__back">
           ← Retour au site
         </Link>
+        <button
+          onClick={handleLogout}
+          style={{
+            marginTop: '0.6rem',
+            width: '100%',
+            padding: '0.5rem',
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.3)',
+            borderRadius: '6px',
+            color: 'inherit',
+            cursor: 'pointer',
+          }}
+        >
+          🔒 Se déconnecter
+        </button>
       </div>
     </aside>
   );

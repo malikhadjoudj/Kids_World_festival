@@ -6,7 +6,43 @@ export const getAssetUrl = (path) => {
   if (/^https?:\/\//i.test(path)) return path;
   return `${ASSET_BASE}${path.startsWith('/') ? path : `/${path}`}`;
 };
+// ─── ADMIN AUTH ───────────────────────────────────────────
 
+export const adminLogin = async (username, password) => {
+  const res = await fetch(`${API_BASE}/admin/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.error || 'Identifiants incorrects.');
+  }
+  localStorage.setItem('adminToken', data.token);
+  return data.token;
+};
+
+export const adminLogout = () => {
+  localStorage.removeItem('adminToken');
+};
+
+export const isAdminLoggedIn = () => Boolean(localStorage.getItem('adminToken'));
+
+const authFetch = async (url, options = {}) => {
+  const token = localStorage.getItem('adminToken');
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+  if (res.status === 401) {
+    adminLogout();
+    window.location.href = '/admin/login';
+  }
+  return res;
+};
 export const getStoredExposantId = () => {
   const fromSession = sessionStorage.getItem('exposantId');
   if (fromSession) return fromSession;
@@ -63,7 +99,7 @@ export const fetchPacks = async () => {
 // ─── EXPOSANTS ────────────────────────────────────────────
 
 export const fetchExposants = async () => {
-  const res = await fetch(`${API_BASE}/exposants`);
+  const res = await authFetch(`${API_BASE}/exposants`);
   if (!res.ok) throw new Error('Erreur lors de la récupération des exposants.');
   return res.json();
 };
@@ -105,7 +141,7 @@ export const updateExposant = async (id, data) => {
 };
 
 export const updateExposantStatut = async (id, statutContrat) => {
-  const res = await fetch(`${API_BASE}/exposants/${id}/statut`, {
+  const res = await authFetch(`${API_BASE}/exposants/${id}/statut`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ statutContrat }),
@@ -115,7 +151,7 @@ export const updateExposantStatut = async (id, statutContrat) => {
 };
 
 export const assignStandToExposant = async (exposantId, standId) => {
-  const res = await fetch(`${API_BASE}/exposants/${exposantId}/stand`, {
+  const res = await authFetch(`${API_BASE}/exposants/${exposantId}/stand`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ standId }),
@@ -128,7 +164,7 @@ export const assignStandToExposant = async (exposantId, standId) => {
 };
 
 export const updateStand = async (standId, data) => {
-  const res = await fetch(`${API_BASE}/stands/${standId}`, {
+  const res = await authFetch(`${API_BASE}/stands/${standId}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -157,7 +193,7 @@ export const uploadDocument = async (exposantId, file) => {
 // ─── STANDS ───────────────────────────────────────────────
 
 export const fetchStands = async () => {
-  const res = await fetch(`${API_BASE}/stands`);
+  const res = await authFetch(`${API_BASE}/stands`);
   if (!res.ok) throw new Error('Erreur lors de la récupération des stands.');
   return res.json();
 };
