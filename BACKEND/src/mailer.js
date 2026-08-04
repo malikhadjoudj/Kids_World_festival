@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
-
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
 // Le transporteur est créé une seule fois et réutilisé pour chaque envoi.
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
