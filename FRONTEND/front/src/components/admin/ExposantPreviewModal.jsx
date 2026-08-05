@@ -73,6 +73,12 @@ function ExposantPreviewModal({ exposant, onClose }) {
             </div>
             <div className="preview-modal__field preview-modal__field--full">
               <span className="preview-modal__label">Activité Principale</span>
+              {exposant.surface ? (
+  <div className="preview-modal__field">
+    <span className="preview-modal__label">Surface choisie</span>
+    <span className="preview-modal__value">{exposant.surface} m²</span>
+  </div>
+) : null}
               <span className="preview-modal__value">{exposant.activite}</span>
             </div>
           </div>

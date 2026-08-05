@@ -55,7 +55,7 @@ function DocumentTarificationPage() {
   const selectedPacks = getSelectedPacks(selectedPackIds);
   const lineItems = getPackLineItems(selectedPackIds, surface);
   const prices = calculateSelectionPrices(selectedPackIds, surface);
-  const needsSurface = selectedPacks.some((selectedPack) => selectedPack.perSquareMeter);
+  const needsSurface = selectedPacks.some((selectedPack) => selectedPack.perSquareMeter || selectedPack.requiresSurface);
 
   const validateField = (name, value) => {
     const trimmed = String(value || '').trim();

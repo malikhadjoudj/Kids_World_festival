@@ -95,6 +95,7 @@ export const PACKS = [
     price: 4500000,
     priceLabel: '4 500 000 DA',
     surface: 'Activation Premium éco Park',
+    requiresSurface: true,
     chapiteau: false,
     icon: '🇩🇿',
     color: 'var(--color-danger)',

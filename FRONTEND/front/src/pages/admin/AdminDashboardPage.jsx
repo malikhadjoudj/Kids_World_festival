@@ -315,6 +315,7 @@ function AdminDashboardPage() {
                 <th>Gerant</th>
                 <th>Telephone</th>
                 <th>Pack</th>
+                <th>Surface</th>
                 <th>Statut Contrat</th>
                 <th>Emplacement</th>
                 <th>Actions</th>
@@ -323,6 +324,9 @@ function AdminDashboardPage() {
             <tbody>
               {filtered.map((exposant, i) => {
                 const packLabel = getPackNames(exposant, packs);
+                <td>
+  {exposant.surface ? `${exposant.surface} m²` : '—'}
+</td>
                 const statut = getStatutLabel(exposant.statutContrat);
 
                 return (
