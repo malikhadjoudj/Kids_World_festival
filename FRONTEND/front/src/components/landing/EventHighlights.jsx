@@ -4,33 +4,34 @@ import './EventHighlights.css';
 const HIGHLIGHTS = [
   {
     icon: '🎯',
-    title: 'Visibilité maximale',
+    title: 'Une audience qualifiée',
     description:
-      'Exposez vos produits devant des milliers de familles et décideurs du secteur enfant.',
+      'Rencontrez des milliers de familles, d’enfants et de futurs consommateurs réunis dans un même lieu.',
+  },
+ 
+  {
+    icon: '🚀 ',
+    title: ' Développez votre visibilité',
+    description:
+      "Mettez en avant votre marque, vos nouveautés et vos produits auprès d’un public engagé.",
   },
   {
-    icon: '🤝',
-    title: 'Networking B2B',
+    icon: '✨',
+    title: 'Faites vivre votre marque',
     description:
-      "Rencontrez d'autres marques, nouez des partenariats stratégiques et développez votre réseau.",
+      'Créez une expérience mémorable grâce aux animations, démonstrations, dégustations et interactions avec les visiteurs.',
   },
-  {
-    icon: '🎨',
-    title: 'Univers immersif',
+   {
+    icon: '💼 ',
+    title: ' Générez des opportunités commerciales',
     description:
-      "Un salon pensé comme une aventure : le thème voyage crée une expérience mémorable pour vos visiteurs.",
-  },
-  {
-    icon: '📊',
-    title: 'Gestion simplifiée',
-    description:
-      'Inscription en ligne, suivi de dossier, attribution de stand — tout est centralisé sur notre plateforme.',
+      "Développez vos ventes, présentez vos offres et transformez les visiteurs en futurs clients.",
   },
 ];
 
 const COUNTERS = [
   { target: 4, suffix: ' jours', label: "d'événement" },
-  { target: 10000, suffix: '+', label: 'visiteurs attendus' },
+  { target: 20000, suffix: '+', label: 'visiteurs attendus' },
   { target: 3, suffix: '', label: 'Pack Sponsor' },
   { target: 4, suffix: '', label: 'formules adaptées' },
 ];

@@ -127,9 +127,7 @@ function HeroSection() {
           <p className="hero__tagline">{EVENT_INFO.tagline}</p>
 
           <p className="hero__description">
-            Rejoignez le salon incontournable dédié aux marques enfants.
-            Exposez vos produits, rencontrez votre audience et
-            faites de cette édition un succès inoubliable.
+           Le Kids World Festival offre aux marques, exposants et partenaires une plateforme idéale pour rencontrer les familles avant la rentrée scolaire. C’est l’occasion de mettre en avant vos produits, lancer vos nouveautés, proposer vos articles promotionnels et développer votre visibilité dans un environnement festif, propice aux échanges et à l’engagement.
           </p>
 
           <div className="hero__actions">
