@@ -6,7 +6,7 @@
     "avantages": "Pourquoi participer",
     "reserver": "Réserver votre stand"
   },
- "hero": {
+  "hero": {
     "description": "Le Kids World Festival offre aux marques, exposants et partenaires une plateforme idéale pour rencontrer les familles avant la rentrée scolaire. C'est l'occasion de mettre en avant vos produits, lancer vos nouveautés, proposer vos articles promotionnels et développer votre visibilité dans un environnement festif, propice aux échanges et à l'engagement.",
     "ctaPrimary": "Devenir Exposant",
     "ctaSecondary": "En savoir plus",
@@ -44,6 +44,63 @@
     "cgv": "Conditions générales",
     "confidentialite": "Politique de confidentialité",
     "rights": "Tous droits réservés."
+  },
+  "docSteps": {
+    "step1Instruction": "Étape 1 : renseignez les informations du bon de commande puis validez pour passer à l'étape 2.",
+    "step2Instruction": "Étape 2 : Lisez les conditions de participation, renseignez votre nom et entreprise puis validez."
+  },
+"howItWorks": {
+    "badge": "🔄 Simple & Rapide",
+    "title": "Comment ça marche ?",
+    "subtitle": "En 3 étapes simples, réservez votre stand au KIDS WORLD FESTIVAL.",
+    "steps": [
+      {
+        "title": "Remplissez le formulaire",
+        "description": "Renseignez les informations de votre entreprise : raison sociale, RC, NIF, coordonnées du gérant."
+      },
+      {
+        "title": "Choisissez votre formule",
+        "description": "Sélectionnez parmi nos 4 offres celle qui correspond le mieux à votre projet et votre budget."
+      },
+      {
+        "title": "Consulter un aperçu des contrats",
+        "description": "Téléchargez le bon de commande et le contrat d'utilisation pré-rempli"
+      },
+      {
+        "title": "Signez et déposez votre contrat",
+        "description": "Imprimez vos contrats, signez-les et puis scannez-les pour les soumettre à notre équipe"
+      }
+    ]
+  },
+  "highlights": {
+    "badge": "✨ Avantages",
+    "title": "Pourquoi exposer au KIDS WORLD FESTIVAL ?",
+    "subtitle": "Un événement unique pour booster votre marque dans l'univers enfant.",
+    "counterLabels": ["d'événement", "visiteurs attendus", "Pack Sponsor", "formules adaptées"],
+    "items": [
+      {
+        "title": "Une audience qualifiée",
+        "description": "Rencontrez des milliers de familles, d'enfants et de futurs consommateurs réunis dans un même lieu."
+      },
+      {
+        "title": "Développez votre visibilité",
+        "description": "Mettez en avant votre marque, vos nouveautés et vos produits auprès d'un public engagé."
+      },
+      {
+        "title": "Faites vivre votre marque",
+        "description": "Créez une expérience mémorable grâce aux animations, démonstrations, dégustations et interactions avec les visiteurs."
+      },
+      {
+        "title": "Générez des opportunités commerciales",
+        "description": "Développez vos ventes, présentez vos offres et transformez les visiteurs en futurs clients."
+      }
+    ]
+  },
+  "cta": {
+    "titleBefore": "Prêt à embarquer pour le",
+    "text": "Réservez dès maintenant et offrez à votre marque la visibilité qu'elle mérite lors du dernier grand événement avant la rentrée.",
+    "btnReserve": "Choisir une Formule",
+    "btnContact": "Nous contacter"
   },
   "packsData": {
     "standard": {

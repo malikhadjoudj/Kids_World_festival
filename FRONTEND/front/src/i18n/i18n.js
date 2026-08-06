@@ -16,9 +16,9 @@ i18n.use(initReactI18next).init({
 });
 
 // Applique la direction du texte (RTL pour l'arabe) et la langue au <html>
-const applyDirection = (lng) => {
+const applyLanguage = (lng) => {
   document.documentElement.lang = lng;
-  document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
+  document.documentElement.dir = 'ltr';
 };
 
 applyDirection(savedLang);

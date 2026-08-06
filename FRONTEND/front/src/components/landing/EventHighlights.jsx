@@ -1,39 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './EventHighlights.css';
 
-const HIGHLIGHTS = [
-  {
-    icon: '🎯',
-    title: 'Une audience qualifiée',
-    description:
-      'Rencontrez des milliers de familles, d’enfants et de futurs consommateurs réunis dans un même lieu.',
-  },
- 
-  {
-    icon: '🚀 ',
-    title: ' Développez votre visibilité',
-    description:
-      "Mettez en avant votre marque, vos nouveautés et vos produits auprès d’un public engagé.",
-  },
-  {
-    icon: '✨',
-    title: 'Faites vivre votre marque',
-    description:
-      'Créez une expérience mémorable grâce aux animations, démonstrations, dégustations et interactions avec les visiteurs.',
-  },
-   {
-    icon: '💼 ',
-    title: ' Générez des opportunités commerciales',
-    description:
-      "Développez vos ventes, présentez vos offres et transformez les visiteurs en futurs clients.",
-  },
-];
-
-const COUNTERS = [
-  { target: 4, suffix: ' jours', label: "d'événement" },
-  { target: 20000, suffix: '+', label: 'visiteurs attendus' },
-  { target: 3, suffix: '', label: 'Pack Sponsor' },
-  { target: 4, suffix: '', label: 'formules adaptées' },
+const HIGHLIGHT_ICONS = ['🎯', '🚀 ', '✨', '💼 '];
+const COUNTER_TARGETS = [
+  { target: 4, suffix: ' jours' },
+  { target: 20000, suffix: '+' },
+  { target: 3, suffix: '' },
+  { target: 4, suffix: '' },
 ];
 
 function AnimatedCounter({ target, suffix, label }) {
@@ -80,13 +54,19 @@ function AnimatedCounter({ target, suffix, label }) {
 }
 
 function EventHighlights() {
+  const { t } = useTranslation();
+  const counterLabels = t('highlights.counterLabels', { returnObjects: true });
+  const items = t('highlights.items', { returnObjects: true });
+
+  const counters = COUNTER_TARGETS.map((c, i) => ({ ...c, label: counterLabels[i] }));
+
   return (
     <section className="highlights" id="avantages">
       {/* Counters */}
       <div className="highlights__counters-section">
         <div className="container">
           <div className="highlights__counters">
-            {COUNTERS.map((c, i) => (
+            {counters.map((c, i) => (
               <AnimatedCounter key={i} {...c} />
             ))}
           </div>
@@ -97,19 +77,19 @@ function EventHighlights() {
       <div className="highlights__advantages">
         <div className="container">
           <div className="section-header">
-            <span className="section-badge">✨ Avantages</span>
+            <span className="section-badge">{t('highlights.badge')}</span>
             <h2 className="section-title section-title--light">
-              Pourquoi exposer au KIDS WORLD FESTIVAL ?
+              {t('highlights.title')}
             </h2>
             <p className="section-subtitle section-subtitle--light">
-              Un événement unique pour booster votre marque dans l'univers enfant.
+              {t('highlights.subtitle')}
             </p>
           </div>
 
           <div className="highlights__grid">
-            {HIGHLIGHTS.map((item, i) => (
+            {items.map((item, i) => (
               <div className="highlights__card" key={i}>
-                <span className="highlights__card-icon">{item.icon}</span>
+                <span className="highlights__card-icon">{HIGHLIGHT_ICONS[i]}</span>
                 <h3 className="highlights__card-title">{item.title}</h3>
                 <p className="highlights__card-desc">{item.description}</p>
               </div>

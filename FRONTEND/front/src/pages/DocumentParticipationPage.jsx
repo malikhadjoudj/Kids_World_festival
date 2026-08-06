@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { PACKS } from '../constants/packs';
 import { updateExposant, getStoredExposantId } from '../services/api';
@@ -6,6 +7,7 @@ import './DocumentTarificationPage.css';
 import './DocumentParticipationPage.css';
 
 function DocumentParticipationPage() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const packId = searchParams.get('pack');
@@ -96,7 +98,7 @@ function DocumentParticipationPage() {
       </div>
 
       <div className="doc-cta-bar">
-        <p>Étape 2 : Lisez les conditions de participation, renseignez votre nom et entreprise puis validez.</p>
+        <p>{t('docSteps.step2Instruction')}</p>
         <button
           className={`doc-nav__btn-primary doc-cta-bar__btn ${isSaving ? 'loading' : ''}`}
           onClick={handleSave}

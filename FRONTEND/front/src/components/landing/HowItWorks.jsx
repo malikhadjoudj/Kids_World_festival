@@ -1,56 +1,32 @@
+import { useTranslation } from 'react-i18next';
 import './HowItWorks.css';
 
-const STEPS = [
-  {
-    number: '01',
-    icon: '📝',
-    title: 'Remplissez le formulaire',
-    description:
-      'Renseignez les informations de votre entreprise : raison sociale, RC, NIF, coordonnées du gérant.',
-  },
-  {
-    number: '02',
-    icon: '📦',
-    title: 'Choisissez votre formule',
-    description:
-      'Sélectionnez parmi nos 4 offres celle qui correspond le mieux à votre projet et votre budget.',
-  },
-  {
-    number: '03',
-    icon: '📝',
-    title: 'Consulter un apercu des contrats',
-    description:
-      'Téléchargez le bon de commande et le contrat dutilisation pré-rempli ',
-  },
-  {
-    number: '04',
-    icon: '✍️',
-    title: 'Signez votre  et déposez votre contrat',
-    description:
-    "imprimer vos contrat signez les et puis scannez les pour les soumettres a notre équipe",
-  },
-];
+const STEP_ICONS = ['📝', '📦', '📝', '✍️'];
+const STEP_NUMBERS = ['01', '02', '03', '04'];
 
 function HowItWorks() {
+  const { t } = useTranslation();
+  const steps = t('howItWorks.steps', { returnObjects: true });
+
   return (
     <section className="how-it-works" id="etapes">
       <div className="container">
         <div className="section-header">
-          <span className="section-badge">🔄 Simple & Rapide</span>
-          <h2 className="section-title">Comment ça marche ?</h2>
+          <span className="section-badge">{t('howItWorks.badge')}</span>
+          <h2 className="section-title">{t('howItWorks.title')}</h2>
           <p className="section-subtitle">
-            En 3 étapes simples, réservez votre stand au KIDS WORLD FESTIVAL.
+            {t('howItWorks.subtitle')}
           </p>
         </div>
 
         <div className="how-it-works__timeline">
-          {STEPS.map((step, i) => (
+          {steps.map((step, i) => (
             <div className="how-it-works__step" key={i}>
               <div className="how-it-works__step-icon-wrap">
-                <div className="how-it-works__step-icon">{step.icon}</div>
-                <span className="how-it-works__step-number">{step.number}</span>
+                <div className="how-it-works__step-icon">{STEP_ICONS[i]}</div>
+                <span className="how-it-works__step-number">{STEP_NUMBERS[i]}</span>
               </div>
-              {i < STEPS.length - 1 && (
+              {i < steps.length - 1 && (
                 <div className="how-it-works__connector" aria-hidden="true"></div>
               )}
               <h3 className="how-it-works__step-title">{step.title}</h3>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import {
   calculateSelectionPrices,
@@ -11,6 +12,7 @@ import { createExposant, setStoredExposantId, setStoredPackSelection } from '../
 import './DocumentTarificationPage.css';
 
 function DocumentTarificationPage() {
+   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const packId = searchParams.get('pack');
@@ -234,7 +236,7 @@ function DocumentTarificationPage() {
       </div>
 
       <div className="doc-cta-bar">
-        <p>Étape 1 : renseignez les informations du bon de commande puis validez pour passer à l'étape 2.</p>
+        <p>{t('docSteps.step1Instruction')}</p>
         <button
           className={`doc-nav__btn-primary doc-cta-bar__btn ${isSaving ? 'loading' : ''}`}
           onClick={handleSave}
