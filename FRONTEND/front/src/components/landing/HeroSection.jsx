@@ -126,7 +126,7 @@ function HeroSection() {
             <span className="hero__title-festival">FESTIVAL</span>
           </h1>
 
-          <p className="hero__tagline">{EVENT_INFO.tagline}</p>
+          <p className="hero__tagline">{t('event.tagline')}</p>
 
          <p className="hero__description">
             {t('hero.description')}

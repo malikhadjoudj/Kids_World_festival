@@ -29,9 +29,9 @@ function Footer() {
                   <span className="footer__logo-sub">FESTIVAL</span>
                 </div>
               </div>
-              <p className="footer__tagline">
-                {EVENT_INFO.tagline}
-              </p>
+             <p className="footer__tagline">
+  {t('event.tagline')}
+</p>
               <p className="footer__organizer">
                 {t('footer.organizedBy')} <strong>{EVENT_INFO.organizer}</strong>
               </p>
