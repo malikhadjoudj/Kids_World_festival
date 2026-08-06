@@ -1,15 +1,17 @@
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import Button from '../common/Button';
 import { EVENT_INFO } from '../../constants/packs';
 import './HeroSection.css';
 
 const STATS = [
   { value: '3', label: 'Offre Sponsor' },
-  { value: '20000+', label: 'Visiteurs prévus' },
+  { value: '20 000+', label: 'Visiteurs prévus' },
   { value: '4', label: 'Formules disponibles' },
 ];
 
 function HeroSection() {
+  const { t } = useTranslation();
   const particlesRef = useRef(null);
 
   useEffect(() => {
@@ -115,7 +117,7 @@ function HeroSection() {
         <div className="hero__text">
           <div className="hero__badge">
             <span className="hero__badge-dot"></span>
-            {EVENT_INFO.type} — Organisé par {EVENT_INFO.organizer}
+            {EVENT_INFO.type} — {t('footer.organizedBy')} {EVENT_INFO.organizer}
           </div>
 
           <h1 className="hero__title">
@@ -126,16 +128,16 @@ function HeroSection() {
 
           <p className="hero__tagline">{EVENT_INFO.tagline}</p>
 
-          <p className="hero__description">
-           Le Kids World Festival offre aux marques, exposants et partenaires une plateforme idéale pour rencontrer les familles avant la rentrée scolaire. C’est l’occasion de mettre en avant vos produits, lancer vos nouveautés, proposer vos articles promotionnels et développer votre visibilité dans un environnement festif, propice aux échanges et à l’engagement.
+         <p className="hero__description">
+            {t('hero.description')}
           </p>
 
           <div className="hero__actions">
             <Button variant="primary" size="lg" href="#formules" icon="🚀">
-              Devenir Exposant
+              {t('hero.ctaPrimary')}
             </Button>
             <Button variant="outline" size="lg" href="#etapes" icon="📋">
-              En savoir plus
+              {t('hero.ctaSecondary')}
             </Button>
           </div>
 
