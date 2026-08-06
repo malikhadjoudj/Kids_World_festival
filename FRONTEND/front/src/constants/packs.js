@@ -157,9 +157,9 @@ export const EVENT_INFO = {
   name: 'KIDS WORLD FESTIVAL',
   tagline: 'Le Dernier Voyage Avant la Rentree Scolaire',
   organizer: 'MELEVEN',
-  type: 'Salon B2B',
+  type: 'Salon B2B2C',
   description:
-    "Un salon B2B mettant en relation l'agence organisatrice avec des marques et exposants souhaitant tenir un stand, dans un univers ludique dedie aux enfants.",
+    "Un salon B2B2C mettant en relation l'agence organisatrice avec des marques et exposants souhaitant tenir un stand, dans un univers ludique dedie aux enfants.",
 };
 
 export const normalizePackIds = (value) => {
