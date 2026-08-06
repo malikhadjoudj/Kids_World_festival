@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Button from './Button';
 import './Navbar.css';
 
@@ -10,6 +11,7 @@ const NAV_LINKS = [
 ];
 
 function Navbar() {
+   const { t, i18n } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -23,6 +25,9 @@ function Navbar() {
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const closeMenu = () => setMenuOpen(false);
+  const toggleLanguage = () => {
+    i18n.changeLanguage(i18n.language === 'ar' ? 'fr' : 'ar');
+  };
 
   return (
     <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`} id="navbar">
@@ -55,6 +60,14 @@ function Navbar() {
             </Button>
           </li>
         </ul>
+         <div className="navbar__cta">
+          <button type="button" className="navbar__lang-btn navbar__lang-btn--desktop" onClick={toggleLanguage}>
+            {i18n.language === 'ar' ? 'FR' : 'العربية'}
+          </button>
+          <Button variant="primary" size="sm" href="#formules">
+            {t('nav.reserver')}
+          </Button>
+        </div>
 
         {/* CTA Desktop */}
         <div className="navbar__cta">

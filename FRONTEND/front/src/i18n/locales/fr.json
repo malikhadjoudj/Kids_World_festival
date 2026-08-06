@@ -1,0 +1,137 @@
+{
+  "nav": {
+    "accueil": "Accueil",
+    "formules": "Nos Formules",
+    "etapes": "Comment ça marche",
+    "avantages": "Pourquoi participer",
+    "reserver": "Réserver votre stand"
+  },
+ "hero": {
+    "description": "Le Kids World Festival offre aux marques, exposants et partenaires une plateforme idéale pour rencontrer les familles avant la rentrée scolaire. C'est l'occasion de mettre en avant vos produits, lancer vos nouveautés, proposer vos articles promotionnels et développer votre visibilité dans un environnement festif, propice aux échanges et à l'engagement.",
+    "ctaPrimary": "Devenir Exposant",
+    "ctaSecondary": "En savoir plus",
+    "statSponsor": "Offre Sponsor",
+    "statVisiteurs": "Visiteurs prévus",
+    "statFormules": "Formules disponibles"
+  },
+  "packs": {
+    "sectionBadge": "📦 Nos Formules",
+    "sectionTitle": "Choisissez la formule qui vous correspond",
+    "sectionSubtitle": "4 offres pensées pour s'adapter à chaque besoin, de l'espace clé en main à la liberté totale de configuration.",
+    "sponsorBadge": "🚀 Nos Packs Sponsor",
+    "sponsorTitle": "Découvrez les offres de sponsoring",
+    "sponsorSubtitle": "3 packs sponsor dédiés pour renforcer votre visibilité sur le festival.",
+    "mostRequested": "⭐ Le plus demandé",
+    "selected": "Sélectionnée",
+    "add": "Ajouter",
+    "chooseThis": "Choisir ce pack",
+    "remove": "Retirer",
+    "perSqm": "par m²",
+    "continue": "Continuer",
+    "none": "Aucune",
+    "formuleSelectedOne": "formule sélectionnée",
+    "formuleSelectedOther": "formules sélectionnées",
+    "combineNote": "Vous pouvez combiner une formule avec Espace Vente.",
+    "droitsIntervention": "Droits d'intervention obligatoires :",
+    "droitsSuffix": "DA, appliqués en sus de chaque offre."
+  },
+  "footer": {
+    "organizedBy": "Organisé par",
+    "navTitle": "Navigation",
+    "infosTitle": "Informations",
+    "contactTitle": "Contact",
+    "grille": "Grille tarifaire",
+    "cgv": "Conditions générales",
+    "confidentialite": "Politique de confidentialité",
+    "rights": "Tous droits réservés."
+  },
+  "packsData": {
+    "standard": {
+      "name": "Formule Standard",
+      "surface": "jusqu'à 25 m²",
+      "features": [
+        "Surface couverte sous chapiteau",
+        "Raccordement électrique",
+        "1 table incluse",
+        "2 chaises incluses",
+        "Jusqu'à 25 m² d'espace"
+      ]
+    },
+    "expo-plus": {
+      "name": "Formule Expo Plus",
+      "surface": "jusqu'à 50 m²",
+      "features": [
+        "Surface couverte sous chapiteau",
+        "Raccordement électrique",
+        "1 table incluse",
+        "2 chaises incluses",
+        "Jusqu'à 50 m² d'espace",
+        "Visibilité premium"
+      ]
+    },
+    "espace-vente": {
+      "name": "Espace Vente",
+      "surface": "jusqu'à 18 m²",
+      "features": [
+        "Surface couverte sous chapiteau",
+        "Raccordement électrique",
+        "1 table incluse",
+        "2 chaises incluses",
+        "Jusqu'à 18 m² d'espace"
+      ]
+    },
+    "espace-nu": {
+      "name": "Espace Nu",
+      "surface": "selon m² choisis",
+      "features": [
+        "Surface brute",
+        "Sans aménagement inclus",
+        "Liberté totale de configuration",
+        "Surface au choix"
+      ]
+    },
+    "pack-italie": {
+      "name": "Pack Sponsor Italie",
+      "surface": "Activation jusqu'à 60 m²",
+      "features": [
+        "Intégration de votre logo sur le photocall officiel et les espaces de prise de photos",
+        "Mise à disposition d'un espace d'activation de marque pouvant accueillir un stand jusqu'à 60 m²",
+        "Diffusion de votre spot publicitaire sur les écrans géants du festival, selon la programmation officielle",
+        "Créneau d'animation sur scène pour organiser une démonstration, une tombola, un jeu concours ou une prise de parole de votre marque",
+        "Emplacements stratégiques"
+      ]
+    },
+    "pack-turquie": {
+      "name": "Pack Sponsor Turquie",
+      "surface": "Pack visibilité grand format",
+      "features": [
+        "Panneaux publicitaires grand format et bâches tendues positionnés au niveau de l'accès principal, face au grand parking visiteurs",
+        "Installation d'un Pop-Up à l'entrée du festival pour assurer l'orientation des visiteurs et maximiser la visibilité de votre marque",
+        "Intégration de votre logo sur la scène principale du festival",
+        "Présence de votre logo sur l'ensemble des panneaux publicitaires et supports de signalétique du festival",
+        "Diffusion de votre spot publicitaire sur le grand écran géant tout au long de l'événement",
+        "Mise à disposition de 2 créneaux de 15 minutes (hors programmation artistique) pour une animation de marque, prise de parole ou tombola sur la scène principale",
+        "Mise à disposition d'un espace d'exposition de 150 m² pour votre activation de marque, ainsi qu'un chapiteau de 25 m² dédié à la vente ou à la présentation de vos produits"
+      ]
+    },
+    "pack-algerie": {
+      "name": "Pack Sponsor Algérie",
+      "surface": "Activation Premium éco Park",
+      "features": [
+        "Animations sur scène (tombola, jeux, défis, quiz ou remise de cadeaux) avant les spectacles et animations principales",
+        "Branding exclusif de l'arche d'entrée du World Festival Kids",
+        "Mise à disposition d'un espace Pop-Up exclusif à l'entrée du festival pour l'accueil, l'information, la distribution d'échantillons ou l'activation de votre marque",
+        "Habillage des barrières de sécurité et des dispositifs de guidage présents sur le site",
+        "Panneaux publicitaires grand format et bâches tendues positionnés au niveau de l'accès principal, face au grand parking visiteurs",
+        "Intégration de votre logo sur les supports verticaux de la scène",
+        "Branding drapeau sur tous les points photo du site éco Park",
+        "Espace d'exposition et d'activation de marque entièrement personnalisable selon vos objectifs",
+        "Espace dédié à la vente et à la démonstration de vos produits pendant toute la durée du festival",
+        "Branding exclusif de la zone Détente, avec un habillage aux couleurs de votre marque (parasols, mobilier, PLV, mange-debout, etc. fournis par le sponsor)",
+        "Habillage des principales allées du festival avec fanions, drapeaux et éléments de décoration personnalisés à l'image de votre marque",
+        "Visibilité premium de votre logo sur les principaux supports de communication, de signalétique et d'orientation du festival",
+        "Insertion d'une publicité dans le guide officiel du festival"
+      ]
+    }
+  }
+}

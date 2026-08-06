@@ -1,6 +1,9 @@
+import { useTranslation } from 'react-i18next';
+import { EVENT_INFO } from '../../constants/packs';
 import './Footer.css';
 
 function Footer() {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -27,37 +30,37 @@ function Footer() {
                 </div>
               </div>
               <p className="footer__tagline">
-                Le Dernier Voyage Avant la Rentrée Scolaire
+                {EVENT_INFO.tagline}
               </p>
               <p className="footer__organizer">
-                Organisé par <strong>MELEVEN</strong>
+                {t('footer.organizedBy')} <strong>{EVENT_INFO.organizer}</strong>
               </p>
             </div>
 
             {/* Navigation */}
             <div className="footer__col">
-              <h4 className="footer__col-title">Navigation</h4>
+              <h4 className="footer__col-title">{t('footer.navTitle')}</h4>
               <ul className="footer__col-links">
-                <li><a href="#accueil">Accueil</a></li>
-                <li><a href="#formules">Nos Formules</a></li>
-                <li><a href="#etapes">Comment ça marche</a></li>
-                <li><a href="#avantages">Pourquoi participer</a></li>
+                <li><a href="#accueil">{t('nav.accueil')}</a></li>
+                <li><a href="#formules">{t('nav.formules')}</a></li>
+                <li><a href="#etapes">{t('nav.etapes')}</a></li>
+                <li><a href="#avantages">{t('nav.avantages')}</a></li>
               </ul>
             </div>
 
             {/* Infos */}
             <div className="footer__col">
-              <h4 className="footer__col-title">Informations</h4>
+              <h4 className="footer__col-title">{t('footer.infosTitle')}</h4>
               <ul className="footer__col-links">
-                <li><a href="#formules">Grille tarifaire</a></li>
-                <li><a href="#">Conditions générales</a></li>
-                <li><a href="#">Politique de confidentialité</a></li>
+                <li><a href="#formules">{t('footer.grille')}</a></li>
+                <li><a href="#">{t('footer.cgv')}</a></li>
+                <li><a href="#">{t('footer.confidentialite')}</a></li>
               </ul>
             </div>
 
             {/* Contact */}
             <div className="footer__col">
-              <h4 className="footer__col-title">Contact</h4>
+              <h4 className="footer__col-title">{t('footer.contactTitle')}</h4>
               <ul className="footer__col-links">
                 <li>
                   <span className="footer__contact-icon">📧</span>
@@ -77,7 +80,7 @@ function Footer() {
 
           {/* Bottom bar */}
           <div className="footer__bottom">
-            <p>&copy; {currentYear} MELEVEN — KIDS WORLD FESTIVAL. Tous droits réservés.</p>
+            <p>&copy; {currentYear} MELEVEN — KIDS WORLD FESTIVAL. {t('footer.rights')}</p>
             <div className="footer__socials">
               <a href="#" className="footer__social" aria-label="Facebook">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">

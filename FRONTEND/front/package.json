@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "html2canvas": "^1.4.1",
+    "i18next": "^26.3.6",
     "jspdf": "^4.2.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "react-i18next": "^17.0.11",
     "react-router-dom": "^7.18.2"
   },
   "devDependencies": {

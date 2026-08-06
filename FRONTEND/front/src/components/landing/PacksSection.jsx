@@ -1,13 +1,19 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PACKS, DROITS_INTERVENTION, togglePackSelection } from '../../constants/packs';
 import Button from '../common/Button';
 import './PacksSection.css';
 
 function PackCard({ pack, selected, onToggle }) {
+  const { t } = useTranslation();
+  const name = t(`packsData.${pack.id}.name`, pack.name);
+  const surface = t(`packsData.${pack.id}.surface`, pack.surface);
+  const features = t(`packsData.${pack.id}.features`, { returnObjects: true, defaultValue: pack.features });
+
   return (
     <div className={`pack-card ${pack.popular ? 'pack-card--popular' : ''} ${selected ? 'pack-card--selected' : ''}`}>
       {pack.popular && (
-        <div className="pack-card__badge">⭐ Le plus demandé</div>
+        <div className="pack-card__badge">{t('packs.mostRequested')}</div>
       )}
 
       <label className="pack-card__select">
@@ -16,25 +22,25 @@ function PackCard({ pack, selected, onToggle }) {
           checked={selected}
           onChange={() => onToggle(pack.id)}
         />
-        <span>{selected ? 'Sélectionnée' : 'Ajouter'}</span>
+        <span>{selected ? t('packs.selected') : t('packs.add')}</span>
       </label>
 
       <div className="pack-card__header">
         <span className="pack-card__icon">{pack.icon}</span>
-        <h3 className="pack-card__name">{pack.name}</h3>
+        <h3 className="pack-card__name">{name}</h3>
         <div className="pack-card__price">
           <span className="pack-card__price-value">{pack.priceLabel}</span>
           {pack.perSquareMeter && (
-            <span className="pack-card__price-unit">par m²</span>
+            <span className="pack-card__price-unit">{t('packs.perSqm')}</span>
           )}
         </div>
-        <span className="pack-card__surface">{pack.surface}</span>
+        <span className="pack-card__surface">{surface}</span>
       </div>
 
       <div className="pack-card__divider"></div>
 
       <ul className="pack-card__features">
-        {pack.features.map((feature, i) => (
+        {(Array.isArray(features) ? features : pack.features).map((feature, i) => (
           <li key={i} className="pack-card__feature">
             <span className="pack-card__feature-check">✓</span>
             {feature}
@@ -49,7 +55,7 @@ function PackCard({ pack, selected, onToggle }) {
           onClick={() => onToggle(pack.id)}
           className="pack-card__btn"
         >
-          {selected ? 'Retirer' : 'Choisir ce pack'}
+          {selected ? t('packs.remove') : t('packs.chooseThis')}
         </Button>
       </div>
     </div>
@@ -57,6 +63,7 @@ function PackCard({ pack, selected, onToggle }) {
 }
 
 function PacksSection() {
+  const { t } = useTranslation();
   const [selectedPackIds, setSelectedPackIds] = useState([]);
   const selectedPackParam = encodeURIComponent(selectedPackIds.join(','));
 
@@ -74,13 +81,12 @@ function PacksSection() {
     <section className="packs" id="formules">
       <div className="container">
         <div className="section-header">
-          <span className="section-badge">📦 Nos Formules</span>
+          <span className="section-badge">{t('packs.sectionBadge')}</span>
           <h2 className="section-title">
-            Choisissez la formule qui vous correspond
+            {t('packs.sectionTitle')}
           </h2>
           <p className="section-subtitle">
-            4 offres pensées pour s'adapter à chaque besoin, de l'espace clé en main
-            à la liberté totale de configuration.
+            {t('packs.sectionSubtitle')}
           </p>
         </div>
 
@@ -97,12 +103,12 @@ function PacksSection() {
 
         <div className="packs__sponsor-section">
           <div className="section-header">
-            <span className="section-badge">🚀 Nos Packs Sponsor</span>
+            <span className="section-badge">{t('packs.sponsorBadge')}</span>
             <h2 className="section-title">
-              Découvrez les offres de sponsoring
+              {t('packs.sponsorTitle')}
             </h2>
             <p className="section-subtitle">
-              3 packs sponsor dédiés pour renforcer votre visibilité sur le festival.
+              {t('packs.sponsorSubtitle')}
             </p>
           </div>
 
@@ -121,9 +127,10 @@ function PacksSection() {
         <div className="packs__selection-bar">
           <div>
             <strong>
-              {selectedPackIds.length || 'Aucune'} formule{selectedPackIds.length > 1 ? 's' : ''} sélectionnée{selectedPackIds.length > 1 ? 's' : ''}
+              {selectedPackIds.length || t('packs.none')}{' '}
+              {selectedPackIds.length > 1 ? t('packs.formuleSelectedOther') : t('packs.formuleSelectedOne')}
             </strong>
-            <p>Vous pouvez combiner une formule avec Espace Vente.</p>
+            <p>{t('packs.combineNote')}</p>
           </div>
           {selectedPackIds.length > 0 ? (
             <Button
@@ -132,7 +139,7 @@ function PacksSection() {
               to={`/document-tarification?pack=${selectedPackParam}`}
               className="packs__selection-btn"
             >
-              Continuer
+              {t('packs.continue')}
             </Button>
           ) : (
             <Button
@@ -141,7 +148,7 @@ function PacksSection() {
               className="packs__selection-btn"
               disabled
             >
-              Continuer
+              {t('packs.continue')}
             </Button>
           )}
         </div>
@@ -149,8 +156,8 @@ function PacksSection() {
         <div className="packs__note">
           <span className="packs__note-icon">ℹ️</span>
           <p>
-            <strong>Droits d'intervention obligatoires :</strong>{' '}
-            {DROITS_INTERVENTION.toLocaleString('fr-DZ')} DA, appliqués en sus de chaque offre.
+            <strong>{t('packs.droitsIntervention')}</strong>{' '}
+            {DROITS_INTERVENTION.toLocaleString('fr-DZ')} {t('packs.droitsSuffix')}
           </p>
         </div>
       </div>
