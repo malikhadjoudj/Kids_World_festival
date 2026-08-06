@@ -4,14 +4,13 @@ import Button from '../common/Button';
 import { EVENT_INFO } from '../../constants/packs';
 import './HeroSection.css';
 
-const STATS = [
-  { value: '3', label: 'Offre Sponsor' },
-  { value: '20 000+', label: 'Visiteurs prévus' },
-  { value: '4', label: 'Formules disponibles' },
-];
-
 function HeroSection() {
   const { t } = useTranslation();
+  const STATS = [
+    { value: '3', label: t('hero.statSponsor') },
+    { value: '20 000+', label: t('hero.statVisiteurs') },
+    { value: '4', label: t('hero.statFormules') },
+  ];
   const particlesRef = useRef(null);
 
   useEffect(() => {
