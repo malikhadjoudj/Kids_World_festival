@@ -15,17 +15,18 @@ i18n.use(initReactI18next).init({
   interpolation: { escapeValue: false },
 });
 
-// Applique la direction du texte (RTL pour l'arabe) et la langue au <html>
+// On ne change JAMAIS la direction visuelle (toujours LTR), même en arabe —
+// seul le texte est traduit, la mise en page reste identique.
 const applyLanguage = (lng) => {
   document.documentElement.lang = lng;
   document.documentElement.dir = 'ltr';
 };
 
-applyDirection(savedLang);
+applyLanguage(savedLang);
 
 i18n.on('languageChanged', (lng) => {
   localStorage.setItem('lang', lng);
-  applyDirection(lng);
+  applyLanguage(lng);
 });
 
 export default i18n;
