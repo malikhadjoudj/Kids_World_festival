@@ -391,19 +391,54 @@ function DocumentTarificationPage() {
           {needsSurface && (
             <div className="doc-field-row" style={{ marginTop: '1rem' }}>
               <label className="doc-field-label">Surface souhaitée (m²) :</label>
-              <input
-                className={`doc-field-input ${validationErrors.surface ? 'doc-field-input--error' : ''}`}
-                type="number"
-                min="9"
-                step="1"
-                value={surface}
-                onChange={(e) => {
-                  setSurface(e.target.value);
-                  setValidationErrors((prev) => ({ ...prev, surface: '' }));
-                  setSaveMessage('');
-                }}
-                placeholder="Minimum 9 m²"
-              />
+              {tierPack ? (
+                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                  {tierPack.surfaceTiers.map((tier) => (
+                    <label
+                      key={tier.surface}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        padding: '0.7rem 1.2rem',
+                        borderRadius: '8px',
+                        border: Number(surface) === tier.surface ? '2px solid #0B2545' : '1px solid #ccc',
+                        background: Number(surface) === tier.surface ? '#0B2545' : '#fff',
+                        color: Number(surface) === tier.surface ? '#fff' : '#222',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="surfaceTier"
+                        checked={Number(surface) === tier.surface}
+                        onChange={() => {
+                          setSurface(String(tier.surface));
+                          setValidationErrors((prev) => ({ ...prev, surface: '' }));
+                          setSaveMessage('');
+                        }}
+                        style={{ cursor: 'pointer' }}
+                      />
+                      {tier.surface} m² — {tier.priceLabel}
+                    </label>
+                  ))}
+                </div>
+              ) : (
+                <input
+                  className={`doc-field-input ${validationErrors.surface ? 'doc-field-input--error' : ''}`}
+                  type="number"
+                  min="9"
+                  step="1"
+                  value={surface}
+                  onChange={(e) => {
+                    setSurface(e.target.value);
+                    setValidationErrors((prev) => ({ ...prev, surface: '' }));
+                    setSaveMessage('');
+                  }}
+                  placeholder="Minimum 9 m²"
+                />
+              )}
               {validationErrors.surface && <p className="doc-field-error">{validationErrors.surface}</p>}
             </div>
           )}
