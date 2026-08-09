@@ -5,12 +5,12 @@ import './EventHighlights.css';
 const HIGHLIGHT_ICONS = ['🎯', '🚀 ', '✨', '💼 '];
 const COUNTER_TARGETS = [
   { target: 4, suffix: ' jours' },
-  { target: 25000/j, suffix: '+' },
+  { target: 25000, prefix: '+', suffix: '/J' },
   { target: 3, suffix: '' },
   { target: 4, suffix: '' },
 ];
 
-function AnimatedCounter({ target, suffix, label }) {
+function AnimatedCounter({ target, prefix = '', suffix, label }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const hasAnimated = useRef(false);
@@ -46,7 +46,7 @@ function AnimatedCounter({ target, suffix, label }) {
   return (
     <div className="highlights__counter" ref={ref}>
       <span className="highlights__counter-value">
-        {count.toLocaleString('fr-FR')}{suffix}
+         {prefix}{count.toLocaleString('fr-FR')}{suffix}
       </span>
       <span className="highlights__counter-label">{label}</span>
     </div>
