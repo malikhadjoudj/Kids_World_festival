@@ -5,7 +5,7 @@ import './EventHighlights.css';
 const HIGHLIGHT_ICONS = ['🎯', '🚀 ', '✨', '💼 '];
 const COUNTER_TARGETS = [
   { target: 4, suffix: ' jours' },
-  { target: 20000, suffix: '+' },
+  { target: 25000/j, suffix: '+' },
   { target: 3, suffix: '' },
   { target: 4, suffix: '' },
 ];

@@ -8,7 +8,7 @@ function HeroSection() {
   const { t } = useTranslation();
   const STATS = [
     { value: '3', label: t('hero.statSponsor') },
-    { value: '20 000+', label: t('hero.statVisiteurs') },
+    { value: '25 000/J+', label: t('hero.statVisiteurs') },
     { value: '4', label: t('hero.statFormules') },
   ];
   const particlesRef = useRef(null);
