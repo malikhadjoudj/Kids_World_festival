@@ -28,6 +28,7 @@ function PackCard({ pack, selected, onToggle }) {
       <div className="pack-card__header">
         <span className="pack-card__icon">{pack.icon}</span>
         <h3 className="pack-card__name">{name}</h3>
+        {pack.subtitle && <p style={{ margin: '0 0 0.5rem', fontSize: '0.85rem', opacity: 0.75 }}>{pack.subtitle}</p>}
         <div className="pack-card__price">
           <span className="pack-card__price-value">{pack.priceLabel}</span>
           {pack.perSquareMeter && (
@@ -71,7 +72,7 @@ function PacksSection() {
     setSelectedPackIds((current) => togglePackSelection(current, packId));
   };
 
-  const formulaPackIds = ['standard', 'expo-plus', 'espace-vente', 'espace-nu'];
+  const formulaPackIds = ['discover-fun', 'sell-win', 'espace-nu'];
   const formulaPacks = formulaPackIds
     .map((id) => PACKS.find((pack) => pack.id === id))
     .filter(Boolean);

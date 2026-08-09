@@ -3,23 +3,23 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const initialPacks = [
-  {
-    id: 'standard',
-    name: 'Formule Standard',
-    description: 'Espace aménagé 9m² avec structure modulaire.',
-    price: 450000,
+ {
+    id: 'discover-fun',
+    name: 'PACK DISCOVER & FUN',
+    description: 'Exposition et animation — surface + électricité + 1 table + 3 chaises. Choix 12m² (220 000 DA) ou 24m² (380 000 DA).',
+    price: 220000,
     perSquareMeter: false,
-    surface: '9m²',
-    icon: '✨'
+    surface: '12m² ou 24m² au choix',
+    icon: '🎪'
   },
-  {
-    id: 'expo-plus',
-    name: 'Formule Expo Plus',
-    description: 'Espace aménagé 15m² avec emplacement premium.',
-    price: 750000,
+   {
+    id: 'sell-win',
+    name: 'PACK SELL & WIN',
+    description: 'Vente — surface + électricité + 1 table + 3 chaises. Choix 12m² (220 000 DA) ou 24m² (380 000 DA).',
+    price: 220000,
     perSquareMeter: false,
-    surface: '15m²',
-    icon: '🚀'
+    surface: '12m² ou 24m² au choix',
+    icon: '🛍️'
   },
   {
     id: 'espace-vente',
@@ -52,7 +52,7 @@ const initialPacks = [
     id: 'pack-italie',
     name: 'Pack Sponsor Italie',
     description: 'Intégration logo photocall, espace d\'activation jusqu\'à 60 m², diffusion spot écrans géants, créneau animation scène.',
-    price: 1000000,
+    price: 1200000,
     perSquareMeter: false,
     surface: 'Activation jusqu\'à 60 m²',
     icon: '🇮🇹'
@@ -70,7 +70,7 @@ const initialPacks = [
     id: 'pack-algerie',
     name: 'Pack Sponsor Algérie',
     description: 'Animations scène, branding arche entrée, Pop-Up exclusif, habillage barrières/allées, visibilité premium.',
-    price: 4500000,
+    price: 4000000,
     perSquareMeter: false,
     surface: 'Activation Premium éco Park',
     icon: '🇩🇿'

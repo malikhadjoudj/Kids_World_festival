@@ -57,7 +57,8 @@ function DocumentTarificationPage() {
   const selectedPacks = getSelectedPacks(selectedPackIds);
   const lineItems = getPackLineItems(selectedPackIds, surface);
   const prices = calculateSelectionPrices(selectedPackIds, surface);
-  const needsSurface = selectedPacks.some((selectedPack) => selectedPack.perSquareMeter || selectedPack.requiresSurface);
+  const needsSurface = selectedPacks.some((selectedPack) => selectedPack.perSquareMeter || selectedPack.requiresSurface|| selectedPack.surfaceTiers);
+  const tierPack = selectedPacks.find((selectedPack) => selectedPack.surfaceTiers);
 
   const validateField = (name, value) => {
     const trimmed = String(value || '').trim();
@@ -139,10 +140,19 @@ function DocumentTarificationPage() {
       return;
     }
 
-   if (needsSurface && (!surface || Number.parseInt(surface, 10) < 9)) {
-  setValidationErrors((prev) => ({ ...prev, surface: 'Surface invalide (9 m² minimum).' }));
-  setSaveMessage('Veuillez indiquer une surface valide de 9 m2 minimum.');
-  return;
+    if (needsSurface) {
+  if (tierPack) {
+    const allowedSurfaces = tierPack.surfaceTiers.map((t) => t.surface);
+    if (!allowedSurfaces.includes(Number.parseInt(surface, 10))) {
+      setValidationErrors((prev) => ({ ...prev, surface: 'Veuillez choisir 12 m² ou 24 m².' }));
+      setSaveMessage('Veuillez choisir une surface : 12 m² ou 24 m².');
+      return;
+    }
+  } else if (!surface || Number.parseInt(surface, 10) < 9) {
+    setValidationErrors((prev) => ({ ...prev, surface: 'Surface invalide (9 m² minimum).' }));
+    setSaveMessage('Veuillez indiquer une surface valide de 9 m2 minimum.');
+    return;
+  }
 }
 
     setIsSaving(true);
@@ -175,20 +185,23 @@ function DocumentTarificationPage() {
     }
   };
 
-  const getPackLabel = (selectedPack) => {
+ const getPackLabel = (selectedPack) => {
+    const tierPrice = selectedPack.surfaceTiers
+      ? (Number.parseInt(surface, 10) === 24 ? '380 000,00 DA' : '220 000,00 DA')
+      : null;
+    const tierSurfaceLabel = surface ? `Surface sélectionnée : ${surface} m²` : 'Surface au choix : 12 m² ou 24 m²';
+ 
     switch (selectedPack.id) {
-      case 'standard':
-        return { title: 'FORMULE STANDARD', price: '450 000,00 DA', desc: 'Comprend : la surface + raccordement électrique + 1 table + 2 chaises', surface: 'Chapiteaux disponibles 25 m²' };
-      case 'expo-plus':
-        return { title: 'FORMULE EXPO PLUS', price: '750 000,00 DA', desc: 'Incluant : la surface + raccordement électrique + 1 table + 2 chaises', surface: 'Chapiteaux disponibles 50 m²' };
+      case 'discover-fun':
+        return { title: 'PACK DISCOVER & FUN', price: tierPrice, desc: 'Exposition et animation — Incluant : la surface + raccordement électrique + 1 table + 3 chaises', surface: tierSurfaceLabel };
+      case 'sell-win':
+        return { title: 'PACK SELL & WIN', price: tierPrice, desc: 'Vente — Incluant : la surface + raccordement électrique + 1 table + 3 chaises', surface: tierSurfaceLabel };
       case 'pack-italie':
-        return { title: 'PACK SPONSOR ITALIE', price: '1 000 000,00 DA HT', desc: 'Logo sur photocall, espace activation 60 m², spot publicitaire et animation sur scène.', surface: 'Visibilité premium pour votre marque' };
+        return { title: 'PACK SPONSOR ITALIE', price: '1 200 000,00 DA HT', desc: 'Logo sur photocall, espace activation 60 m², spot publicitaire et animation sur scène.', surface: 'Visibilité premium pour votre marque' };
       case 'pack-turquie':
         return { title: 'PACK SPONSOR TURQUIE', price: '2 200 000,00 DA HT', desc: 'Grand format publicitaire, Pop-Up d’accueil, scène principale et deux créneaux d’animation.', surface: 'Espace d’exposition 150 m² + chapiteau 25 m²' };
       case 'pack-algerie':
-        return { title: 'PACK SPONSOR ALGÉRIE', price: '4 500 000,00 DA HT', desc: 'Branding exclusif, Pop-Up d’entrée, habillage des allées et présence sur la communication officielle.', surface: 'Activation premium éco Park' };
-      case 'espace-vente':
-        return { title: 'ESPACE VENTE', price: '234 000,00 DA', desc: 'Incluant : la surface + raccordement électrique + 1 table + 2 chaises', surface: 'Chapiteaux disponibles 18 m²' };
+        return { title: 'PACK SPONSOR ALGÉRIE', price: '4 000 000,00 DA HT', desc: 'Branding exclusif, Pop-Up d’entrée, habillage des allées et présence sur la communication officielle.', surface: 'Activation premium éco Park' };
       case 'espace-nu':
         return { title: 'OPTION', price: '', desc: 'Espace nu : 12 000 DA/m²', surface: '' };
       default:

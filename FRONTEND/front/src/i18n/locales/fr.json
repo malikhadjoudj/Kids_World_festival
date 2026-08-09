@@ -106,38 +106,24 @@
     "btnContact": "Nous contacter"
   },
   "packsData": {
-    "standard": {
-      "name": "Formule Standard",
-      "surface": "jusqu'à 25 m²",
+    "discover-fun": {
+      "name": "PACK DISCOVER & FUN",
+      "surface": "12 m² ou 24 m² au choix",
       "features": [
         "Surface couverte sous chapiteau",
         "Raccordement électrique",
         "1 table incluse",
-        "2 chaises incluses",
-        "Jusqu'à 25 m² d'espace"
+        "3 chaises incluses"
       ]
     },
-    "expo-plus": {
-      "name": "Formule Expo Plus",
-      "surface": "jusqu'à 50 m²",
+    "sell-win": {
+      "name": "PACK SELL & WIN",
+      "surface": "12 m² ou 24 m² au choix",
       "features": [
         "Surface couverte sous chapiteau",
         "Raccordement électrique",
         "1 table incluse",
-        "2 chaises incluses",
-        "Jusqu'à 50 m² d'espace",
-        "Visibilité premium"
-      ]
-    },
-    "espace-vente": {
-      "name": "Espace Vente",
-      "surface": "jusqu'à 18 m²",
-      "features": [
-        "Surface couverte sous chapiteau",
-        "Raccordement électrique",
-        "1 table incluse",
-        "2 chaises incluses",
-        "Jusqu'à 18 m² d'espace"
+        "3 chaises incluses"
       ]
     },
     "espace-nu": {

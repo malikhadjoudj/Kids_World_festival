@@ -5,55 +5,58 @@
 
 export const DROITS_INTERVENTION = 15000;
 export const TVA_RATE = 0.19;
-export const ESPACE_VENTE_PACK_ID = 'espace-vente';
-export const FORMULE_PACK_IDS = ['standard', 'expo-plus', 'pack-italie', 'pack-turquie', 'pack-algerie'];
-
+export const FORMULE_PACK_IDS = ['discover & fun', 'sell & win', 'pack-italie', 'pack-turquie', 'pack-algerie'];
 export const PACKS = [
   {
-    id: 'standard',
+   id: 'discover-fun',
     category: 'formule',
-    name: 'Formule Standard',
-    price: 450000,
-    priceLabel: '450 000 DA',
-    surface: "jusqu'a 25 m2",
+    name: 'PACK DISCOVER & FUN',
+    subtitle: 'Exposition et animation',
+    priceLabel: '220 000 - 380 000 DA',
+    surface: '12 m² ou 24 m² au choix',
     chapiteau: true,
-    icon: '🏕️',
+    icon: '🎪',
     color: 'var(--color-primary)',
     features: [
       'Surface couverte sous chapiteau',
-      'Raccordement electrique',
+      'Raccordement électrique',
       '1 table incluse',
-      '2 chaises incluses',
-      "Jusqu'a 25 m2 d'espace",
+      '3 chaises incluses',
     ],
-    popular: false,
-  },
-  {
-    id: 'expo-plus',
-    category: 'formule',
-    name: 'Formule Expo Plus',
-    price: 750000,
-    priceLabel: '750 000 DA',
-    surface: "jusqu'a 50 m2",
-    chapiteau: true,
-    icon: '🎪',
-    color: 'var(--color-accent)',
-    features: [
-      'Surface couverte sous chapiteau',
-      'Raccordement electrique',
-      '1 table incluse',
-      '2 chaises incluses',
-      "Jusqu'a 50 m2 d'espace",
-      'Visibilite premium',
+    surfaceTiers: [
+      { surface: 12, price: 220000, priceLabel: '220 000 DA' },
+      { surface: 24, price: 380000, priceLabel: '380 000 DA' },
     ],
     popular: true,
+  },
+  {
+    id: 'sell-win',
+    category: 'formule',
+    name: 'PACK SELL & WIN',
+    subtitle: 'Vente',
+    priceLabel: '220 000 - 380 000 DA',
+    surface: '12 m² ou 24 m² au choix',
+    chapiteau: true,
+    icon: '🛍️',
+    color: 'var(--color-success)',
+    features: [
+      'Surface couverte sous chapiteau',
+      'Raccordement électrique',
+      '1 table incluse',
+      '3 chaises incluses',
+    ],
+    surfaceTiers: [
+      { surface: 12, price: 220000, priceLabel: '220 000 DA' },
+      { surface: 24, price: 380000, priceLabel: '380 000 DA' },
+    ],
+    popular: false,
   },
   {
     id: 'pack-italie',
     category: 'sponsor',
     name: 'Pack Sponsor Italie',
-    price: 1000000,
-    priceLabel: '1 000 000 DA',
+    price: 1200000,
+    priceLabel: '1 200 000 DA',
     surface: 'Activation jusqu’à 60 m²',
     chapiteau: false,
     icon: '🇮🇹',
@@ -92,8 +95,8 @@ export const PACKS = [
     id: 'pack-algerie',
     category: 'sponsor',
     name: 'Pack Sponsor Algérie',
-    price: 4500000,
-    priceLabel: '4 500 000 DA',
+    price: 4000000,
+    priceLabel: '4 000 000 DA',
     surface: 'Activation Premium éco Park',
     requiresSurface: true,
     chapiteau: false,
@@ -113,25 +116,7 @@ export const PACKS = [
     ],
     popular: false,
   },
-  {
-    id: ESPACE_VENTE_PACK_ID,
-    category: 'option',
-    name: 'Espace Vente',
-    price: 234000,
-    priceLabel: '234 000 DA',
-    surface: "jusqu'a 18 m2",
-    chapiteau: true,
-    icon: '🛍️',
-    color: 'var(--color-success)',
-    features: [
-      'Surface couverte sous chapiteau',
-      'Raccordement electrique',
-      '1 table incluse',
-      '2 chaises incluses',
-      "Jusqu'a 18 m2 d'espace",
-    ],
-    popular: false,
-  },
+  
   {
     id: 'espace-nu',
     category: 'option',
@@ -190,23 +175,17 @@ export const togglePackSelection = (currentPackIds, nextPackId) => {
   if (current.includes(nextPackId)) {
     return current.filter((id) => id !== nextPackId);
   }
+   return [nextPackId];
 
-  if (nextPackId === ESPACE_VENTE_PACK_ID) {
-    const selectedFormula = current.find((id) => FORMULE_PACK_IDS.includes(id));
-    return selectedFormula ? [selectedFormula, ESPACE_VENTE_PACK_ID] : [ESPACE_VENTE_PACK_ID];
-  }
-
-  if (FORMULE_PACK_IDS.includes(nextPackId)) {
-    return current.includes(ESPACE_VENTE_PACK_ID)
-      ? [nextPackId, ESPACE_VENTE_PACK_ID]
-      : [nextPackId];
-  }
-
-  return [nextPackId];
 };
 
 export const getPackPrice = (pack, surface) => {
   if (!pack) return 0;
+  if (pack.surfaceTiers) {
+    const sqMeters = Number.parseInt(surface, 10);
+    const tier = pack.surfaceTiers.find((t) => t.surface === sqMeters);
+    return tier ? tier.price : 0;
+  }
   if (!pack.perSquareMeter) return pack.price;
 
   const sqMeters = Number.parseInt(surface, 10) || 0;
