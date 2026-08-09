@@ -166,9 +166,8 @@ export const getSelectedPacks = (packIds) => {
 
 export const getPrimaryPackId = (packIds) => {
   const normalizedIds = normalizePackIds(packIds);
-  return normalizedIds.find((id) => id !== ESPACE_VENTE_PACK_ID) || normalizedIds[0] || '';
+  return normalizedIds[0] || '';
 };
-
 export const togglePackSelection = (currentPackIds, nextPackId) => {
   const current = normalizePackIds(currentPackIds);
 
