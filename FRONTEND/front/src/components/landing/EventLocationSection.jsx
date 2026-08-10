@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import './EventLocationSection.css';
+import ecolohImage from '../../assets/ecoloh-sablette.jpg';
 
 function EventLocationSection() {
   const { t } = useTranslation();
@@ -48,8 +49,7 @@ function EventLocationSection() {
 
           {/* Photo */}
           <div className="event-location__photo">
-            <img src="/assets/ecoloh-sablette.png" alt="Parc Écoloh, La Sablette, Alger" />
-          </div>
+<img src={ecolohImage} alt="Parc Écoloh, La Sablette, Alger" />          </div>
         </div>
       </div>
     </section>
