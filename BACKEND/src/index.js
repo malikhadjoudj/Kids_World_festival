@@ -338,6 +338,7 @@ app.post('/api/exposants', async (req, res) => {
         packId: data.packId,
         selectedPackIds,
         surface: data.surface ? parseInt(data.surface) : null,
+        packSurfaces: data.packSurfaces || null,
         totalHT: totalHT,
         tva: tva,
         totalTTC: totalTTC,
@@ -384,6 +385,7 @@ app.patch('/api/exposants/:id', async (req, res) => {
             ? normalizePackIds(data.selectedPackIds || data.packIds, data.packId)
             : undefined,
         surface: data.surface !== undefined && data.surface !== null ? parseInt(data.surface) : undefined,
+        packSurfaces: data.packSurfaces !== undefined ? data.packSurfaces : undefined,
         totalHT: data.totalHT !== undefined ? parseFloat(data.totalHT) : undefined,
         tva: data.tva !== undefined ? parseFloat(data.tva) : undefined,
         totalTTC: data.totalTTC !== undefined ? parseFloat(data.totalTTC) : undefined,

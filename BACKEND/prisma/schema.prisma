@@ -50,6 +50,7 @@ model Exposant {
   selectedPackIds      String   @default("")
   
   surface              Int?
+  packSurfaces         String?  // JSON: {"discover-fun":12,"sell-win":24} - surface choisie par pack
   
   // Billing
   totalHT              Float

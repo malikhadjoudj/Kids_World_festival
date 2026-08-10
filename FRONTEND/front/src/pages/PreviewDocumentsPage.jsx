@@ -102,10 +102,20 @@ function PreviewDocumentsPage() {
   // The backend only persists a single "surface" value for the whole dossier
   // (the primary pack's chosen surface), so it's reapplied to every pack in
   // the selection that needs one, matching how it was saved at submission time.
+  // Chaque pack garde sa propre surface (stockée en JSON dans packSurfaces).
+  // On garde exposant.surface comme repli pour les anciens dossiers créés
+  // avant ce correctif (une seule surface globale à l'époque).
+  const savedPackSurfaces = (() => {
+    try {
+      return exposant.packSurfaces ? JSON.parse(exposant.packSurfaces) : {};
+    } catch {
+      return {};
+    }
+  })();
   const invoiceSurfaces = Object.fromEntries(
     getSelectedPacks(selectedPackIds)
       .filter((pack) => pack.perSquareMeter || pack.requiresSurface || pack.surfaceTiers)
-      .map((pack) => [pack.id, exposant.surface])
+      .map((pack) => [pack.id, savedPackSurfaces[pack.id] ?? exposant.surface])
   );
   const invoiceLineItems = getPackLineItems(selectedPackIds, invoiceSurfaces);
   const tarificationData = {
@@ -216,7 +226,7 @@ function PreviewDocumentsPage() {
                   <td className="col-ref">{index + 1}</td>
                   <td className="col-des">
                     <div style={{ fontWeight: '600', marginBottom: '4px' }}>
-                      {pack?.name} {exposant.surface ? `(${exposant.surface} m²)` : ''}
+                      {pack?.name} {invoiceSurfaces[pack.id] ? `(${invoiceSurfaces[pack.id]} m²)` : ''}
                     </div>
                   </td>
                   <td className="col-qte" style={{ verticalAlign: 'top' }}>{String(lineItem.quantity).padStart(2, '0')}</td>

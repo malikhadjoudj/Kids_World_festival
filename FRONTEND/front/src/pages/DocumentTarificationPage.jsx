@@ -181,6 +181,7 @@ function DocumentTarificationPage() {
         selectedPackIds: selectedPackIds.join(','),
         packIds: selectedPackIds,
         surface: primarySurfaceValue ? Number.parseInt(primarySurfaceValue, 10) : null,
+        packSurfaces: JSON.stringify(surfaces),
         totalHT: prices.totaleHT,
         tva: prices.tva,
         totalTTC: prices.totaleTTC,
