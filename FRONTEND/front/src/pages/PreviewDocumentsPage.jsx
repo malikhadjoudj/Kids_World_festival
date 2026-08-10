@@ -6,7 +6,7 @@ import {
   getStoredPackSelection,
   setStoredExposantId,
 } from '../services/api';
-import { DROITS_INTERVENTION, getPackLineItems, normalizePackIds } from '../constants/packs';
+import { DROITS_INTERVENTION, getPackLineItems, getSelectedPacks, normalizePackIds } from '../constants/packs';
 import Button from '../components/common/Button';
 import './PreviewDocumentsPage.css';
 
@@ -99,7 +99,15 @@ function PreviewDocumentsPage() {
     exposant.packIds ||
     exposant.packId
   );
-  const invoiceLineItems = getPackLineItems(selectedPackIds, exposant.surface);
+  // The backend only persists a single "surface" value for the whole dossier
+  // (the primary pack's chosen surface), so it's reapplied to every pack in
+  // the selection that needs one, matching how it was saved at submission time.
+  const invoiceSurfaces = Object.fromEntries(
+    getSelectedPacks(selectedPackIds)
+      .filter((pack) => pack.perSquareMeter || pack.requiresSurface || pack.surfaceTiers)
+      .map((pack) => [pack.id, exposant.surface])
+  );
+  const invoiceLineItems = getPackLineItems(selectedPackIds, invoiceSurfaces);
   const tarificationData = {
     nomPrenom: exposant.documentTarificationNomPrenom || exposant.nomPrenom || '',
     fonction: exposant.documentTarificationFonction || exposant.fonction || '',

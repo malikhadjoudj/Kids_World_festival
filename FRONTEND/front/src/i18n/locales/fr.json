@@ -45,7 +45,8 @@
     "formuleSelectedOther": "formules sélectionnées",
     "combineNote": "Sélectionnez le pack qui correspond à votre activité.",
     "droitsIntervention": "Droits d'intervention obligatoires :",
-    "droitsSuffix": "DA, appliqués en sus de chaque offre."
+    "droitsSuffix": "DA, appliqués en sus de chaque offre.",
+    "pickSurfaceHint": "Choisissez 12 m² ou 24 m² ci-dessus"
   },
   "footer": {
     "organizedBy": "Organisé par",
