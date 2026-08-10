@@ -163,16 +163,16 @@ function DocumentParticipationPage() {
             <div className="part-article">
               <h2 className="part-article__title">ARTICLE 2 : ASSURANCE DU STAND ET DU MATÉRIEL EXPOSÉ</h2>
               <ul className="part-article__list">
-                <li>L'organisateur assurera la sécurité générale du site durant toute la durée de l'événement de l'installation au démontage</li>
-                <li>Un service de gardiennage sera mis en place à fin d'assurer la surveillance globale de l'espace d'exposition</li>
-                <li>L'organisateur ne pourra être tenu responsable en cas de perte, vol ou dommage survenu au niveau des stands ou des biens appartenant aux exposant</li>
+                <li>L'organisateur assurera la sécurité générale du site durant toute la durée de l'événement, de l'installation au démontage.</li>
+                <li>Un service de gardiennage sera mis en place afin d'assurer la surveillance globale de l'espace d'exposition.</li>
+                <li>L'organisateur ne pourra être tenu responsable en cas de perte, vol ou dommage survenu au niveau des stands ou des biens appartenant aux exposants.</li>
               </ul>
               <p className="part-article__note">
-                <strong>Note : chaque exposant est responsable de son stand, de son matériel, de sa marchandise ainsi que son personnel</strong>
+                <strong>Note : chaque exposant est responsable de son stand, de son matériel, de sa marchandise ainsi que de son personnel.</strong>
               </p>
               <ul className="part-article__list">
                 <li>Les emplacements sont attribués par l'organisateur pour garantir une harmonie globale du parcours des visiteurs</li>
-                <li>Les structures, comptoirs, câbles et équipements doivent être parfaitement stable et sécurisés (aucun câble apparent au sol sans passe-câble ou protection)</li>
+                <li>Les structures, comptoirs, câbles et équipements doivent être parfaitement stables et sécurisés (aucun câble apparent au sol sans passe-câble ou protection).</li>
               </ul>
             </div>
 
@@ -181,18 +181,18 @@ function DocumentParticipationPage() {
               <h2 className="part-article__title">ARTICLE 3 : INSTALLATION ET DÉSINSTALLATION DES STANDS</h2>
               <p className="part-article__subhead">Stands aménagés :</p>
               <ul className="part-article__list">
-                <li>Installation : le 31 août et 1 Septembre 2026 de 08h30 à 22h00.</li>
+                <li>Installation : le 15 septembre 2026 de 08h00 à 22h00.</li>
                 <li>Les exposants doivent impérativement terminer leur installation avant 22h00.</li>
               </ul>
               <p className="part-article__subhead">Stands personnalisés (non aménagés) :</p>
               <ul className="part-article__list">
-                <li>Accès au site : à partir du 29 Août 2026.</li>
-                <li>Les exposants disposent du 29, 30, 31 août et 01 septembre pour finaliser leurs installations.</li>
-                <li>Toute installation est strictement interdite à partir du 02 Septembre 2026 (jour d'ouverture du festival).</li>
+                <li>Accès au site : à partir du 13 septembre 2026.</li>
+                <li>Les exposants disposent des 14, 15 septembre et le 15 septembre pour finaliser leurs installations.</li>
+                <li>Toute installation est strictement interdite à partir du 16 septembre 2026 (jour d'ouverture du festival).</li>
               </ul>
               <p className="part-article__subhead part-article__subhead--bold">DÉSINSTALLATION :</p>
               <ul className="part-article__list">
-                <li>La désinstallation débute le 05 Septembre 2026 à partir de 8h30.</li>
+                <li>La désinstallation débute le 20 septembre 2026 à partir de 08h00.</li>
                 <li>Aucune désinstallation ne sera autorisée avant la clôture officielle du salon.</li>
               </ul>
             </div>
@@ -201,9 +201,9 @@ function DocumentParticipationPage() {
             <div className="part-article">
               <h2 className="part-article__title">ARTICLE 4 : CONDITIONS DE RÈGLEMENT</h2>
               <ul className="part-article__list">
-                <li>Un espace avec chapiteaux le paiement s'effectuera à 50% après avoir reçu le bon de commande</li>
-                <li>Un espace nue le paiement s'effectuera à 100% après avoir reçu le bon de commande</li>
-                <li>Pour les pack sponsoring le paiement s'effectuera à 100% après avoir reçu le bon de commande '.</li>
+                <li>Pour un espace avec chapiteaux, le paiement s'effectuera à 50 % après avoir reçu le bon de commande.</li>
+                <li>Pour un espace nu, le paiement s'effectuera à 100 % après avoir reçu le bon de commande.</li>
+                <li>Pour les packs sponsoring, le paiement s'effectuera à 100 % après avoir reçu le bon de commande.</li>
               </ul>
             </div>
 
@@ -232,7 +232,7 @@ function DocumentParticipationPage() {
                   />
                 </div>
                 <p className="part-engagement__declare">
-                  Déclare d'avoir lu et approuvé les present condition et m'engage à les respecter sans réserve
+                  Déclare avoir lu et approuvé les présentes conditions et m'engage à les respecter sans réserve.
                 </p>
               </div>
               <div className="part-engagement__signature">
@@ -256,7 +256,7 @@ function DocumentParticipationPage() {
           {/* Footer */}
           <div className="doc-footer">
             <p>Adresse : Gadiri 02 BT 57 GRP 68 SEC 2, LOT 04 PORTE N 04, Alger / Tél : 0563053463 / E-mail : Meleven.agency@gmail.com</p>
-            <p>RC : 16/00-5061256 A25 / NIF : 267161800029 13911600 /NIS : 2 967 1618 00029 29</p>
+            <p>RC : 16/00-5061256 A25 / NIF : 2671618000291311600 / NIS : 2 967 1618 00029 29</p>
           </div>
         </div>
       </div>

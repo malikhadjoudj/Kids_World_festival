@@ -174,8 +174,26 @@ export const togglePackSelection = (currentPackIds, nextPackId) => {
   if (current.includes(nextPackId)) {
     return current.filter((id) => id !== nextPackId);
   }
-   return [nextPackId];
 
+  let nextSelection = [...current, nextPackId];
+
+  const isSponsor = (id) => ['pack-italie', 'pack-turquie', 'pack-algerie'].includes(id);
+  const isFormule = (id) => ['discover-fun', 'sell-win'].includes(id);
+  const isNu = (id) => id === 'espace-nu';
+
+  // Rule 1: Max 1 sponsor pack
+  if (isSponsor(nextPackId)) {
+    nextSelection = nextSelection.filter(id => id === nextPackId || !isSponsor(id));
+  }
+
+  // Rule 2 & 3: Espace Nu is mutually exclusive with Formules
+  if (isNu(nextPackId)) {
+    nextSelection = nextSelection.filter(id => !isFormule(id));
+  } else if (isFormule(nextPackId)) {
+    nextSelection = nextSelection.filter(id => !isNu(id));
+  }
+
+  return nextSelection;
 };
 
 export const getPackPrice = (pack, surface) => {

@@ -222,22 +222,32 @@
 }
 /* Language switcher */
 .navbar__lang-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #FFD166 0%, #FF9F1C 100%);
+  border: 1.5px solid #FFFFFF;
   border-radius: 999px;
-  padding: 0.35rem 0.9rem;
+  padding: 0.4rem 1.1rem;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 800;
   cursor: pointer;
-  color: #fff;
-  transition: all var(--transition-base);
+  color: #0F172A;
+  box-shadow: 0 4px 14px rgba(255, 159, 28, 0.45);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  letter-spacing: 0.03em;
 }
 
 .navbar__lang-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(255, 159, 28, 0.6);
+  background: linear-gradient(135deg, #FFE082 0%, #FFB703 100%);
 }
- 
+
+.navbar__lang-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
 .navbar__lang-btn--desktop {
   margin-inline-end: 0.75rem;
 }
