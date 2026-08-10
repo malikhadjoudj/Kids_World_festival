@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PACKS, DROITS_INTERVENTION, togglePackSelection } from '../../constants/packs';
+import { PACKS, DROITS_INTERVENTION, togglePackSelection, serializeSurfaces } from '../../constants/packs';
 import Button from '../common/Button';
 import './PacksSection.css';
 
@@ -195,7 +195,7 @@ const handleSelectTierSurface = (packId, surfaceValue) => {
             <Button
               variant="primary"
               size="lg"
-              to={`/document-tarification?pack=${selectedPackParam}&surfaces=${selectedSurfacesParam}}`}
+              to={`/document-tarification?pack=${selectedPackParam}&surfaces=${selectedSurfacesParam}`}
               className="packs__selection-btn"
             >
               {t('packs.continue')}

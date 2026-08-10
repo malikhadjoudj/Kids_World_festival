@@ -100,11 +100,15 @@ app.post('/api/admin/login', (req, res) => {
     res.status(500).json({ error: error.message || 'Erreur serveur.' });
   }
 });
-// ─── Static uploads (local for now) ───────────────────────
-const uploadsDir = path.join(__dirname, 'uploads');
+// ─── Static uploads ─────────────────────────────────────────
+// RAILWAY_VOLUME_MOUNT_PATH is set automatically by Railway once a Volume
+// is attached to this service. UPLOADS_DIR is a manual override if needed.
+// Without either, it falls back to the local folder — same as before,
+// nothing changes for local dev.
+const uploadsDir = process.env.RAILWAY_VOLUME_MOUNT_PATH || process.env.UPLOADS_DIR || path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 app.use('/uploads', express.static(uploadsDir));
-
+ 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const exposantDir = path.join(uploadsDir, req.params.id);

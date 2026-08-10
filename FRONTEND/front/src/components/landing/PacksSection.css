@@ -92,7 +92,43 @@
   accent-color: var(--color-primary);
   cursor: pointer;
 }
+/* Surface tier checkboxes (Discover & Fun / Sell & Win) */
+.pack-card__surface-select {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
 
+.pack-card__surface-option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-height: 32px;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-secondary);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+  background: #fff;
+  transition: border-color var(--transition-base), background var(--transition-base), color var(--transition-base);
+}
+
+.pack-card__surface-option input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.pack-card__surface-option--checked {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+}
 /* Header */
 .pack-card__header {
   text-align: center;
