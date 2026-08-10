@@ -42,16 +42,16 @@ const initialPacks = [
   {
     id: 'pack-italie',
     name: 'Pack Sponsor Italie',
-    description: 'Intégration logo photocall, espace d\'activation jusqu\'à 60 m², diffusion spot écrans géants, créneau animation scène.',
+    description: 'Intégration logo photocall, espace d\'activation , diffusion spot écrans géants, créneau animation scène.',
     price: 1200000,
     perSquareMeter: false,
-    surface: 'Activation jusqu\'à 60 m²',
+    surface: 'Activation ',
     icon: '🇮🇹'
   },
   {
     id: 'pack-turquie',
     name: 'Pack Sponsor Turquie',
-    description: 'Panneaux grand format entrée, Pop-Up, logo scène principale, 2 créneaux animation, 150 m² + chapiteau 25 m².',
+    description: 'Panneaux grand format entrée, Pop-Up, logo scène principale, 2 créneaux animation.',
     price: 2200000,
     perSquareMeter: false,
     surface: 'Pack visibilité grand format',
@@ -63,7 +63,7 @@ const initialPacks = [
     description: 'Animations scène, branding arche entrée, Pop-Up exclusif, habillage barrières/allées, visibilité premium.',
     price: 4000000,
     perSquareMeter: false,
-    surface: 'Activation Premium éco Park',
+    surface: 'Activation Premium ',
     icon: '🇩🇿'
   }
 ];

@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
 const initialPacks = [
-  {
+ {
     id: 'discover-fun',
     name: 'PACK DISCOVER & FUN',
     description: 'Exposition et animation — surface + électricité + 1 table + 3 chaises. Choix 12m² (220 000 DA) ou 24m² (380 000 DA).',
@@ -12,7 +12,7 @@ const initialPacks = [
     surface: '12m² ou 24m² au choix',
     icon: '🎪'
   },
-  {
+   {
     id: 'sell-win',
     name: 'PACK SELL & WIN',
     description: 'Vente — surface + électricité + 1 table + 3 chaises. Choix 12m² (220 000 DA) ou 24m² (380 000 DA).',
@@ -38,6 +38,33 @@ const initialPacks = [
     perSquareMeter: false,
     surface: 'Sur mesure',
     icon: '🍔'
+  },
+  {
+    id: 'pack-italie',
+    name: 'Pack Sponsor Italie',
+    description: 'Intégration logo photocall, espace d\'activation jusqu\'à 60 m², diffusion spot écrans géants, créneau animation scène.',
+    price: 1200000,
+    perSquareMeter: false,
+    surface: 'Activation jusqu\'à 60 m²',
+    icon: '🇮🇹'
+  },
+  {
+    id: 'pack-turquie',
+    name: 'Pack Sponsor Turquie',
+    description: 'Panneaux grand format entrée, Pop-Up, logo scène principale, 2 créneaux animation, 150 m² + chapiteau 25 m².',
+    price: 2200000,
+    perSquareMeter: false,
+    surface: 'Pack visibilité grand format',
+    icon: '🇹🇷'
+  },
+  {
+    id: 'pack-algerie',
+    name: 'Pack Sponsor Algérie',
+    description: 'Animations scène, branding arche entrée, Pop-Up exclusif, habillage barrières/allées, visibilité premium.',
+    price: 4000000,
+    perSquareMeter: false,
+    surface: 'Activation Premium éco Park',
+    icon: '🇩🇿'
   }
 ];
 
@@ -93,7 +120,7 @@ async function main() {
       update: {},
       create: p,
     });
-    console.log(`Created/Updated pack with id: ${pack.id}`);
+    console.log(`✅ Pack: ${pack.name}`);
   }
   for (const s of initialStands) {
     const stand = await prisma.stand.upsert({
@@ -101,7 +128,7 @@ async function main() {
       update: {},
       create: s,
     });
-    console.log(`Created/Updated stand with id: ${stand.id}`);
+    console.log(`Stand: ${stand.id}`);
   }
   console.log('Seeding finished.');
 }
