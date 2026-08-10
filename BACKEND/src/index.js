@@ -252,7 +252,11 @@ app.post('/api/exposants', async (req, res) => {
     if (pack.id === 'espace-nu' && data.surface) {
       packPrice = parseInt(data.surface) * 12000;
     }
-
+    // PACK DISCOVER & FUN / PACK SELL & WIN : prix par palier de surface (12m² ou 24m²).
+    if ((pack.id === 'discover-fun' || pack.id === 'sell-win') && data.surface) {
+      const sqMeters = parseInt(data.surface);
+      packPrice = sqMeters === 24 ? 380000 : 220000;
+    }
     const fallbackTotalHT = packPrice + DROITS_INTERVENTION;
     const fallbackTva = fallbackTotalHT * 0.19;
     const fallbackTotalTTC = fallbackTotalHT + fallbackTva;

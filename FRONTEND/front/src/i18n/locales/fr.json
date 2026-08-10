@@ -2,6 +2,15 @@
   "event": {
     "tagline": "Le Dernier Voyage Avant la Rentrée Scolaire"
   },
+  "eventLocation": {
+    "badge": "🎒 Back to School Edition",
+    "title": "Le Lieu du Festival",
+    "datesLabel": "Dates",
+    "placeLabel": "Lieu",
+    "september": "Septembre",
+    "description": "Le parc ECOLOH des Sablettes bénéficie d'un emplacement stratégique avec un flux important de visiteurs et de familles venant d'Alger et de différentes wilayas. Son cadre exceptionnel en bord de mer, sa grande capacité d'accueil et son accessibilité en font un site idéal pour garantir visibilité, fréquentation et attractivité au Kids World Festival.",
+    "mapLink": "Voir sur Google Maps"
+  },
   "nav": {
     "accueil": "Accueil",
     "formules": "Nos Formules",
