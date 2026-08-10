@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import {
@@ -7,6 +7,7 @@ import {
   getPrimaryPackId,
   getSelectedPacks,
   normalizePackIds,
+  parseSurfaces,
 } from '../constants/packs';
 import { createExposant, setStoredExposantId, setStoredPackSelection } from '../services/api';
 import './DocumentTarificationPage.css';
@@ -23,7 +24,12 @@ function DocumentTarificationPage() {
 
   const [lastPackParam, setLastPackParam] = useState(packId);
   const [selectedPackIds, setSelectedPackIds] = useState(() => normalizePackIds(packId));
-  const [surface, setSurface] = useState(searchParams.get('surface') || '');
+  // Surfaces for Discover & Fun / Sell & Win are chosen upfront on the landing
+  // page and travel here read-only via the "surfaces" URL param.
+  const tierSurfaces = useMemo(() => parseSurfaces(searchParams.get('surfaces')), [searchParams]);
+  // Manual surface entry, still filled in on this page, for packs like
+  // Espace Nu / Pack Algérie which don't have preset tiers.
+  const [surface, setSurface] = useState('');
   const [formData, setFormData] = useState({
     nomPrenom: '',
     fonction: '',
@@ -44,8 +50,21 @@ function DocumentTarificationPage() {
     const selected = normalizePackIds(packId);
     if (selected.length === 0) {
       navigate('/');
+      return;
     }
-  }, [packId, navigate]);
+    // Safety net: a tier pack (Discover & Fun / Sell & Win) must already
+    // carry a valid 12/24 m² surface from the landing page. If it doesn't
+    // (e.g. a hand-edited URL), send the person back to choose it there.
+    const packs = getSelectedPacks(selected);
+    const hasInvalidTierPack = packs.some((selectedPack) => {
+      if (!selectedPack.surfaceTiers) return false;
+      const chosen = tierSurfaces[selectedPack.id];
+      return !selectedPack.surfaceTiers.some((tier) => tier.surface === chosen);
+    });
+    if (hasInvalidTierPack) {
+      navigate('/');
+    }
+  }, [packId, tierSurfaces, navigate]);
 
   if (packId !== lastPackParam) {
     setLastPackParam(packId);
@@ -55,10 +74,14 @@ function DocumentTarificationPage() {
   if (selectedPackIds.length === 0) return null;
 
   const selectedPacks = getSelectedPacks(selectedPackIds);
-  const lineItems = getPackLineItems(selectedPackIds, surface);
-  const prices = calculateSelectionPrices(selectedPackIds, surface);
-  const needsSurface = selectedPacks.some((selectedPack) => selectedPack.perSquareMeter || selectedPack.requiresSurface|| selectedPack.surfaceTiers);
-  const tierPack = selectedPacks.find((selectedPack) => selectedPack.surfaceTiers);
+  const manualSurfacePacks = selectedPacks.filter((selectedPack) => selectedPack.perSquareMeter || selectedPack.requiresSurface);
+  const surfaces = {
+    ...tierSurfaces,
+    ...Object.fromEntries(manualSurfacePacks.map((selectedPack) => [selectedPack.id, surface])),
+  };
+  const lineItems = getPackLineItems(selectedPackIds, surfaces);
+  const prices = calculateSelectionPrices(selectedPackIds, surfaces);
+  const needsManualSurface = manualSurfacePacks.length > 0;
 
   const validateField = (name, value) => {
     const trimmed = String(value || '').trim();
@@ -140,32 +163,24 @@ function DocumentTarificationPage() {
       return;
     }
 
-    if (needsSurface) {
-  if (tierPack) {
-    const allowedSurfaces = tierPack.surfaceTiers.map((t) => t.surface);
-    if (!allowedSurfaces.includes(Number.parseInt(surface, 10))) {
-      setValidationErrors((prev) => ({ ...prev, surface: 'Veuillez choisir 12 m² ou 24 m².' }));
-      setSaveMessage('Veuillez choisir une surface : 12 m² ou 24 m².');
+    if (needsManualSurface && (!surface || Number.parseInt(surface, 10) < 9)) {
+      setValidationErrors((prev) => ({ ...prev, surface: 'Surface invalide (9 m² minimum).' }));
+      setSaveMessage('Veuillez indiquer une surface valide de 9 m2 minimum.');
       return;
     }
-  } else if (!surface || Number.parseInt(surface, 10) < 9) {
-    setValidationErrors((prev) => ({ ...prev, surface: 'Surface invalide (9 m² minimum).' }));
-    setSaveMessage('Veuillez indiquer une surface valide de 9 m2 minimum.');
-    return;
-  }
-}
 
     setIsSaving(true);
     setSaveMessage('');
 
     try {
       const primaryPackId = getPrimaryPackId(selectedPackIds);
+      const primarySurfaceValue = surfaces[primaryPackId];
       const exposant = await createExposant({
         ...formData,
         packId: primaryPackId,
         selectedPackIds: selectedPackIds.join(','),
         packIds: selectedPackIds,
-        surface: needsSurface ? Number.parseInt(surface, 10) : null,
+        surface: primarySurfaceValue ? Number.parseInt(primarySurfaceValue, 10) : null,
         totalHT: prices.totaleHT,
         tva: prices.tva,
         totalTTC: prices.totaleTTC,
@@ -186,11 +201,14 @@ function DocumentTarificationPage() {
   };
 
  const getPackLabel = (selectedPack) => {
+    const packSurface = surfaces[selectedPack.id];
     const tierPrice = selectedPack.surfaceTiers
-      ? (Number.parseInt(surface, 10) === 24 ? '380 000,00 DA' : '220 000,00 DA')
+      ? (Number(packSurface) === 24 ? '380 000,00 DA' : '220 000,00 DA')
       : null;
-    const tierSurfaceLabel = surface ? `Surface sélectionnée : ${surface} m²` : 'Surface au choix : 12 m² ou 24 m²';
- 
+    const tierSurfaceLabel = selectedPack.surfaceTiers
+      ? (packSurface ? `Surface sélectionnée : ${packSurface} m²` : 'Surface au choix : 12 m² ou 24 m²')
+      : null;
+
     switch (selectedPack.id) {
       case 'discover-fun':
         return { title: 'PACK DISCOVER & FUN', price: tierPrice, desc: 'Exposition et animation — Incluant : la surface + raccordement électrique + 1 table + 3 chaises', surface: tierSurfaceLabel };
@@ -388,57 +406,22 @@ function DocumentTarificationPage() {
             })}
           </div>
 
-          {needsSurface && (
+          {needsManualSurface && (
             <div className="doc-field-row" style={{ marginTop: '1rem' }}>
               <label className="doc-field-label">Surface souhaitée (m²) :</label>
-              {tierPack ? (
-                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  {tierPack.surfaceTiers.map((tier) => (
-                    <label
-                      key={tier.surface}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        padding: '0.7rem 1.2rem',
-                        borderRadius: '8px',
-                        border: Number(surface) === tier.surface ? '2px solid #0B2545' : '1px solid #ccc',
-                        background: Number(surface) === tier.surface ? '#0B2545' : '#fff',
-                        color: Number(surface) === tier.surface ? '#fff' : '#222',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <input
-                        type="radio"
-                        name="surfaceTier"
-                        checked={Number(surface) === tier.surface}
-                        onChange={() => {
-                          setSurface(String(tier.surface));
-                          setValidationErrors((prev) => ({ ...prev, surface: '' }));
-                          setSaveMessage('');
-                        }}
-                        style={{ cursor: 'pointer' }}
-                      />
-                      {tier.surface} m² — {tier.priceLabel}
-                    </label>
-                  ))}
-                </div>
-              ) : (
-                <input
-                  className={`doc-field-input ${validationErrors.surface ? 'doc-field-input--error' : ''}`}
-                  type="number"
-                  min="9"
-                  step="1"
-                  value={surface}
-                  onChange={(e) => {
-                    setSurface(e.target.value);
-                    setValidationErrors((prev) => ({ ...prev, surface: '' }));
-                    setSaveMessage('');
-                  }}
-                  placeholder="Minimum 9 m²"
-                />
-              )}
+              <input
+                className={`doc-field-input ${validationErrors.surface ? 'doc-field-input--error' : ''}`}
+                type="number"
+                min="9"
+                step="1"
+                value={surface}
+                onChange={(e) => {
+                  setSurface(e.target.value);
+                  setValidationErrors((prev) => ({ ...prev, surface: '' }));
+                  setSaveMessage('');
+                }}
+                placeholder="Minimum 9 m²"
+              />
               {validationErrors.surface && <p className="doc-field-error">{validationErrors.surface}</p>}
             </div>
           )}

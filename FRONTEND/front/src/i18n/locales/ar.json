@@ -45,7 +45,8 @@
     "formuleSelectedOther": "باقات مختارة",
     "combineNote": "يمكنكم الجمع بين باقة و«مساحة البيع».",
     "droitsIntervention": "رسوم التدخل الإلزامية:",
-    "droitsSuffix": "دج، تُضاف إلى كل عرض."
+    "droitsSuffix": "دج، تُضاف إلى كل عرض.",
+    "pickSurfaceHint": "اختاروا 12 م² أو 24 م² أعلاه"
   },
   "footer": {
     "organizedBy": "تنظيم",

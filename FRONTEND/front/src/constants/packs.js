@@ -6,6 +6,8 @@
 export const DROITS_INTERVENTION = 15000;
 export const TVA_RATE = 0.19;
 export const FORMULE_PACK_IDS = ['discover & fun', 'sell & win', 'pack-italie', 'pack-turquie', 'pack-algerie'];
+// Packs whose surface (12 m² / 24 m²) is chosen upfront, directly on the pack card
+export const TIER_SURFACE_PACK_IDS = ['discover-fun', 'sell-win'];
 export const PACKS = [
   {
    id: 'discover-fun',
@@ -196,22 +198,27 @@ export const togglePackSelection = (currentPackIds, nextPackId) => {
   return nextSelection;
 };
 
-export const getPackPrice = (pack, surface) => {
+/**
+ * `surfaces` is a map of { [packId]: surfaceInSqMeters }, so that each pack
+ * (Discover & Fun, Sell & Win, Espace Nu, Pack Algérie...) can carry its own
+ * independent surface value instead of sharing a single global value.
+ */
+export const getPackPrice = (pack, surfaces) => {
   if (!pack) return 0;
+  const sqMeters = Number.parseInt(surfaces ? surfaces[pack.id] : undefined, 10);
+
   if (pack.surfaceTiers) {
-    const sqMeters = Number.parseInt(surface, 10);
     const tier = pack.surfaceTiers.find((t) => t.surface === sqMeters);
     return tier ? tier.price : 0;
   }
   if (!pack.perSquareMeter) return pack.price;
 
-  const sqMeters = Number.parseInt(surface, 10) || 0;
-  return pack.price * sqMeters;
+  return pack.price * (Number.isNaN(sqMeters) ? 0 : sqMeters);
 };
 
-export const getPackLineItems = (packIds, surface) => {
+export const getPackLineItems = (packIds, surfaces) => {
   return getSelectedPacks(packIds).map((pack) => {
-    const price = getPackPrice(pack, surface);
+    const price = getPackPrice(pack, surfaces);
     return {
       pack,
       quantity: 1,
@@ -221,11 +228,35 @@ export const getPackLineItems = (packIds, surface) => {
   });
 };
 
-export const calculateSelectionPrices = (packIds, surface) => {
-  const packPrice = getPackLineItems(packIds, surface).reduce((sum, item) => sum + item.amount, 0);
+export const calculateSelectionPrices = (packIds, surfaces) => {
+  const packPrice = getPackLineItems(packIds, surfaces).reduce((sum, item) => sum + item.amount, 0);
   const totaleHT = packPrice + DROITS_INTERVENTION;
   const tva = totaleHT * TVA_RATE;
   const totaleTTC = totaleHT + tva;
 
   return { packPrice, totaleHT, tva, totaleTTC };
+};
+
+// ─── Surfaces map <-> URL query string helpers ───────────────────────────
+// Encodes as "discover-fun:12,sell-win:24" so it can travel in a URL param.
+export const serializeSurfaces = (surfaces) => {
+  if (!surfaces) return '';
+  return Object.entries(surfaces)
+    .filter(([, value]) => value !== undefined && value !== null && value !== '')
+    .map(([id, value]) => `${id}:${value}`)
+    .join(',');
+};
+
+export const parseSurfaces = (value) => {
+  if (!value) return {};
+  return String(value)
+    .split(',')
+    .reduce((acc, entry) => {
+      const [id, surface] = entry.split(':');
+      const parsed = Number.parseInt(surface, 10);
+      if (id && !Number.isNaN(parsed)) {
+        acc[id.trim()] = parsed;
+      }
+      return acc;
+    }, {});
 };
