@@ -201,7 +201,7 @@ function DocumentTarificationPage() {
       case 'pack-turquie':
         return { title: 'PACK SPONSOR TURQUIE', price: '2 200 000,00 DA HT', desc: 'Grand format publicitaire, Pop-Up d’accueil, scène principale et deux créneaux d’animation.', surface: 'Espace d’exposition 150 m² + chapiteau 25 m²' };
       case 'pack-algerie':
-        return { title: 'PACK SPONSOR ALGÉRIE', price: '4 000 000,00 DA HT', desc: 'Branding exclusif, Pop-Up d’entrée, habillage des allées et présence sur la communication officielle.', surface: 'Activation premium éco Park' };
+        return { title: 'PACK SPONSOR ALGÉRIE', price: '4 000 000,00 DA HT', desc: 'Branding exclusif, Pop-Up d’entrée, habillage des allées et présence sur la communication officielle.', surface: 'Activation premium' };
       case 'espace-nu':
         return { title: 'OPTION', price: '', desc: 'Espace nu : 12 000 DA/m²', surface: '' };
       default:

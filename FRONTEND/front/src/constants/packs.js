@@ -97,7 +97,7 @@ export const PACKS = [
     name: 'Pack Sponsor Algérie',
     price: 4000000,
     priceLabel: '4 000 000 DA',
-    surface: 'Activation Premium éco Park',
+    surface: 'Activation Premium',
     requiresSurface: true,
     chapiteau: false,
     icon: '🇩🇿',

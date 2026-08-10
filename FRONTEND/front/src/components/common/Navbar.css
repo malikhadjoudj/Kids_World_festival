@@ -222,14 +222,20 @@
 }
 /* Language switcher */
 .navbar__lang-btn {
-  background: transparent;
-  border: 1px solid var(--color-border, #ddd);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 999px;
   padding: 0.35rem 0.9rem;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  color: inherit;
+  color: #fff;
+  transition: all var(--transition-base);
+}
+
+.navbar__lang-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
 }
  
 .navbar__lang-btn--desktop {
