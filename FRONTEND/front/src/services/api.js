@@ -198,3 +198,27 @@ export const fetchStands = async () => {
   if (!res.ok) throw new Error('Erreur lors de la récupération des stands.');
   return res.json();
 };
+
+export const createStand = async (data) => {
+  const res = await authFetch(`${API_BASE}/stands`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Erreur lors de la création du stand.');
+  }
+  return res.json();
+};
+
+export const deleteStand = async (standId) => {
+  const res = await authFetch(`${API_BASE}/stands/${standId}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Erreur lors de la suppression du stand.');
+  }
+  return res.json();
+};

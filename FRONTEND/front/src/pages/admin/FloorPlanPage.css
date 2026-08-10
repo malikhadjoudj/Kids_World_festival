@@ -68,6 +68,92 @@
   border: 1px solid var(--color-border);
 }
 
+/* Add Stand Toolbar */
+.floor-plan__add-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.floor-plan__add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-lg);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-primary);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.floor-plan__add-btn:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+.floor-plan__add-btn--active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+  animation: pulse-add 1.5s infinite;
+}
+
+@keyframes pulse-add {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(6, 214, 160, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(6, 214, 160, 0); }
+}
+
+.floor-plan__add-options {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.floor-plan__add-label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-muted);
+}
+
+.floor-plan__add-select {
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-card);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--fs-sm);
+}
+
+.floor-plan__add-hint {
+  font-size: var(--fs-xs);
+  color: var(--color-primary);
+  font-weight: var(--fw-medium);
+  animation: blink-hint 1.2s infinite;
+}
+
+@keyframes blink-hint {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Map in add mode */
+.floor-plan__map-container--add-mode {
+  cursor: crosshair;
+  box-shadow: 0 0 0 3px rgba(6, 214, 160, 0.4), var(--shadow-card);
+}
+
+.floor-plan__map-container--add-mode .floor-plan__svg {
+  cursor: crosshair;
+}
+
 /* Layout */
 .floor-plan__layout {
   display: grid;
@@ -90,18 +176,29 @@
   height: auto;
 }
 
-/* Stand Interactions */
+/* Stand Interactions — free stands are invisible, revealed on hover */
 .floor-plan__stand {
-  transition: opacity 0.2s ease;
+  transition: opacity 0.15s ease;
 }
 
-.floor-plan__stand:hover rect {
-  filter: brightness(1.15);
-  stroke-width: 2;
+/* Free stand hover — subtle glow reveals the clickable area */
+.floor-plan__stand--free:hover .floor-plan__stand-hitbox {
+  fill: rgba(255, 255, 255, 0.35) !important;
+  fill-opacity: 1 !important;
+  stroke: rgba(6, 214, 160, 0.8) !important;
+  stroke-width: 2px !important;
+  filter: drop-shadow(0 0 6px rgba(6, 214, 160, 0.5));
 }
 
-.floor-plan__stand--selected rect {
-  filter: brightness(1.1) drop-shadow(0 0 6px rgba(0,0,0,0.3));
+/* Occupied stand hover — brighten */
+.floor-plan__stand--occupied:hover .floor-plan__stand-hitbox {
+  fill-opacity: 0.75 !important;
+  filter: brightness(1.2) drop-shadow(0 0 4px rgba(0,0,0,0.3));
+}
+
+/* Selected stand — green glow */
+.floor-plan__stand--selected .floor-plan__stand-hitbox {
+  filter: drop-shadow(0 0 8px rgba(6, 214, 160, 0.6));
 }
 
 /* Side Panel */
@@ -158,6 +255,17 @@
 .floor-plan__detail-row input:read-only {
   color: var(--color-text-muted);
   cursor: default;
+}
+
+.floor-plan__detail-row-duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.floor-plan__detail-row-duo .floor-plan__detail-row {
+  margin-bottom: 0;
 }
 
 .floor-plan__detail-surface {
@@ -244,6 +352,29 @@
   opacity: 0.6;
   cursor: wait;
   box-shadow: none;
+}
+
+.floor-plan__detail-delete {
+  width: 100%;
+  margin-top: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border: 2px solid #e53935;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: #e53935;
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.floor-plan__detail-delete:hover {
+  background: #e53935;
+  color: white;
+}
+
+.floor-plan__detail-delete:disabled {
+  opacity: 0.5;
+  cursor: wait;
 }
 
 .floor-plan__detail-message {

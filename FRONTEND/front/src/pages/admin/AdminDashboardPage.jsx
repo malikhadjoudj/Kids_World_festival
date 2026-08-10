@@ -28,7 +28,7 @@ const getPackNames = (exposant, packs) => {
       if (exposant.pack?.id === id) return exposant.pack;
       return packs.find((pack) => pack.id === id) || { id, name: id };
     })
-    .map((pack) => pack.name?.replace('Formule ', '') || pack.id)
+    .map((pack) => pack.name?.replace('PACK ', '') || pack.id)
     .join(' + ');
 };
 
@@ -43,14 +43,15 @@ const hasReachedValidationStep = (exposant) => {
 const enrichStandForDisplay = (stand, index) => {
   if (stand.zone) return stand;
 
-  const prefix = stand.id?.charAt(0)?.toUpperCase();
-  const zone = prefix === 'B' ? 'inter' : prefix === 'C' ? 'centre' : 'ext';
-  const ring = prefix === 'B' ? 'middle' : prefix === 'C' ? 'inner' : 'outer';
+  // Derive zone from ID prefix to match ZONES in mockStands.js
+  let zone = 'option';
+  if (stand.id?.startsWith('SP')) zone = 'sponsor';
+  else if (stand.id?.startsWith('C')) zone = 'chapiteau';
+  else if (stand.id?.startsWith('NU')) zone = 'option';
 
   return {
     ...stand,
     zone,
-    ring,
     angle: stand.angle ?? index * 30,
   };
 };
@@ -284,7 +285,7 @@ function AdminDashboardPage() {
                 className={`admin-filter ${activeFilter === pack.id ? 'admin-filter--active' : ''}`}
                 onClick={() => setActiveFilter(pack.id)}
               >
-                {pack.icon} {pack.name?.replace('Formule ', '')}
+                {pack.icon} {pack.name?.replace('PACK ', '')}
                 <span className="admin-filter__count">{stats.byPack[pack.id] || 0}</span>
               </button>
             ))}
