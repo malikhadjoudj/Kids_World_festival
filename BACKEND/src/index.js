@@ -192,6 +192,54 @@ app.patch('/api/stands/:id',requireAdmin, async (req, res) => {
   }
 });
 
+// POST create stand
+app.post('/api/stands', requireAdmin, async (req, res) => {
+  const { id, surface, x, y, packCompatible } = req.body;
+  if (!id) return res.status(400).json({ error: 'ID du stand obligatoire.' });
+  const surfaceVal = Number(surface) || 12;
+  const xVal = Number(x) || 100;
+  const yVal = Number(y) || 100;
+
+  try {
+    const existing = await prisma.stand.findUnique({ where: { id } });
+    if (existing) return res.status(400).json({ error: 'Ce stand existe déjà.' });
+
+    const stand = await prisma.stand.create({
+      data: {
+        id,
+        surface: surfaceVal,
+        x: xVal,
+        y: yVal,
+        packCompatible: packCompatible || 'all'
+      }
+    });
+    res.json(stand);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible de créer le stand.' });
+  }
+});
+
+// DELETE stand
+app.delete('/api/stands/:id', requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const exposant = await prisma.exposant.findFirst({ where: { standId: id } });
+    if (exposant) {
+      await prisma.exposant.update({
+        where: { id: exposant.id },
+        data: { standId: null }
+      });
+    }
+
+    await prisma.stand.delete({ where: { id } });
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible de supprimer le stand.' });
+  }
+});
+
 // ─── EXPOSANTS ────────────────────────────────────────────
 
 // GET all exposants

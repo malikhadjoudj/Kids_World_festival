@@ -173,6 +173,27 @@
   line-height: 1.4;
 }
 
+/* Edition subtitle */
+.hero__edition {
+  font-family: var(--font-display);
+  font-size: clamp(var(--fs-lg), 3vw, var(--fs-2xl));
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent), var(--color-primary));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--space-sm);
+  animation: fadeInUp 0.8s ease-out 0.3s both, editionShimmer 4s linear infinite;
+  position: relative;
+}
+
+@keyframes editionShimmer {
+  to { background-position: 200% center; }
+}
+
 /* Tagline */
 .hero__tagline {
   font-family: var(--font-display);

@@ -2,31 +2,31 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import { MOCK_STANDS, ZONES } from '../../data/mockStands';
 import { PACKS } from '../../constants/packs';
-import { fetchExposants, fetchStands, updateStand } from '../../services/api';
+import { fetchExposants, fetchStands, updateStand, createStand, deleteStand } from '../../services/api';
 import './FloorPlanPage.css';
 
 const PACK_COLORS = {
-  standard: '#FF6B35',
-  'expo-plus': '#FFD166',
-  'espace-vente': '#06D6A0',
+  'discover-fun': '#FF6B35',
+  'sell-win': '#06D6A0',
+  'pack-italie': '#5B8C5A',
+  'pack-turquie': '#FFD166',
+  'pack-algerie': '#E63946',
   'espace-nu': '#1B4965',
 };
 
-const enrichStandForDisplay = (stand, index) => {
-  if (stand.zone && stand.ring && stand.angle !== undefined) return stand;
+const enrichStandForDisplay = (stand, index = 0) => {
+  if (stand.zone) return stand;
 
-  const prefix = stand.id?.charAt(0)?.toUpperCase();
-  const zone = prefix === 'B' ? 'inter' : prefix === 'C' ? 'centre' : 'ext';
-  const ring = prefix === 'B' ? 'middle' : prefix === 'C' ? 'inner' : 'outer';
-  const zoneIndex = Number.parseInt(String(stand.id).replace(/\D/g, ''), 10) - 1;
-  const fallbackIndex = Number.isFinite(zoneIndex) ? zoneIndex : index;
-  const ringCounts = { outer: 12, middle: 10, inner: 6 };
+  // Derive zone from ID prefix to match ZONES in mockStands.js
+  let zone = 'option';
+  if (stand.id?.startsWith('SP')) zone = 'sponsor';
+  else if (stand.id?.startsWith('C')) zone = 'chapiteau';
+  else if (stand.id?.startsWith('NU')) zone = 'option';
 
   return {
     ...stand,
     zone,
-    ring,
-    angle: stand.angle ?? fallbackIndex * (360 / ringCounts[ring]),
+    angle: stand.angle ?? index * 30,
   };
 };
 
@@ -45,6 +45,8 @@ function FloorPlanPage() {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [addMode, setAddMode] = useState(false);
+  const [newStandType, setNewStandType] = useState('chapiteau'); // 'chapiteau', 'sponsor', 'option'
   const svgRef = useRef(null);
   const movedDuringDragRef = useRef(false);
   const suppressNextClickRef = useRef(false);
@@ -77,12 +79,16 @@ function FloorPlanPage() {
   };
 
   const getStandSize = (stand) => {
+    // Use custom width/height if set, otherwise calculate from surface
+    if (stand.customWidth && stand.customHeight) {
+      return { width: stand.customWidth, height: stand.customHeight };
+    }
     const surface = Number(stand.surface) || 10;
-    const width = 20 + Math.sqrt(surface) * 5;
-    const height = 20 + Math.sqrt(surface) * 1.4;
+    const w = 20 + Math.sqrt(surface) * 5;
+    const h = 20 + Math.sqrt(surface) * 1.4;
     return {
-      width: Math.max(24, Math.min(150, width)),
-      height: Math.max(20, Math.min(50, height)),
+      width: Math.max(24, Math.min(150, w)),
+      height: Math.max(20, Math.min(50, h)),
     };
   };
 
@@ -96,6 +102,7 @@ function FloorPlanPage() {
     if (!matrix) return { x: clientX, y: clientY };
     return pt.matrixTransform(matrix.inverse());
   };
+
   const saveStandUpdate = async (standId, data) => {
     const pending = pendingSavesRef.current;
     pending[standId] = data;
@@ -115,6 +122,7 @@ function FloorPlanPage() {
   };
 
   const handlePointerDown = (event, standId) => {
+    if (addMode) return; // Don't drag in add mode
     event.stopPropagation();
     event.currentTarget.setPointerCapture?.(event.pointerId);
     const stand = stands.find((s) => s.id === standId);
@@ -154,13 +162,17 @@ function FloorPlanPage() {
     }
 
     setDraggingStand(null);
+    const size = getStandSize(stand);
+    const encodedX = Math.floor(stand.x) + size.width / 1000;
+    const encodedY = Math.floor(stand.y) + size.height / 1000;
+
     try {
       setIsSaving(true);
-     await saveStandUpdate(stand.id, {
-  x: stand.x,
-  y: stand.y,
-  surface: stand.surface,
-});
+      await saveStandUpdate(stand.id, {
+        x: encodedX,
+        y: encodedY,
+        surface: stand.surface,
+      });
       setMessage('Position et taille du stand mises à jour.');
     } catch (err) {
       console.error(err);
@@ -182,21 +194,147 @@ function FloorPlanPage() {
     );
   };
 
+  const handleWidthChange = (event) => {
+    const value = Number(event.target.value);
+    if (!selectedStand) return;
+    setStands((prev) =>
+      prev.map((stand) =>
+        stand.id === selectedStand
+          ? { ...stand, customWidth: Number.isFinite(value) ? Math.max(10, value) : stand.customWidth }
+          : stand
+      )
+    );
+  };
+
+  const handleHeightChange = (event) => {
+    const value = Number(event.target.value);
+    if (!selectedStand) return;
+    setStands((prev) =>
+      prev.map((stand) =>
+        stand.id === selectedStand
+          ? { ...stand, customHeight: Number.isFinite(value) ? Math.max(10, value) : stand.customHeight }
+          : stand
+      )
+    );
+  };
+
   const handleSelectedStandSave = async () => {
     const stand = stands.find((s) => s.id === selectedStand);
     if (!stand) return;
 
+    const size = getStandSize(stand);
+    const encodedX = Math.floor(stand.x) + size.width / 1000;
+    const encodedY = Math.floor(stand.y) + size.height / 1000;
+
     try {
       setIsSaving(true);
-     await saveStandUpdate(stand.id, {
-  x: stand.x,
-  y: stand.y,
-  surface: stand.surface,
-});
+      await saveStandUpdate(stand.id, {
+        x: encodedX,
+        y: encodedY,
+        surface: stand.surface,
+      });
       setMessage('Stand enregistré avec succès.');
     } catch (err) {
       console.error(err);
       setMessage(err.message || 'Erreur lors de la sauvegarde du stand.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Generate next stand ID based on type
+  const getNextStandId = (type) => {
+    const prefix = type === 'sponsor' ? 'SP' : type === 'option' ? 'NU' : 'C';
+    const existing = stands
+      .filter((s) => s.id.startsWith(prefix))
+      .map((s) => {
+        const num = parseInt(s.id.replace(prefix, ''), 10);
+        return isNaN(num) ? 0 : num;
+      });
+    const max = existing.length > 0 ? Math.max(...existing) : 0;
+    const next = max + 1;
+    return next < 10 ? `${prefix}0${next}` : `${prefix}${next}`;
+  };
+
+  // Add stand by clicking on the map
+  const handleMapClick = async (event) => {
+    if (!addMode) return;
+    
+    const point = toSvgPoint(event.clientX, event.clientY);
+    const newId = getNextStandId(newStandType);
+    const surface = newStandType === 'sponsor' ? 50 : newStandType === 'option' ? 30 : 12;
+
+    const width = newStandType === 'sponsor' ? 60 : newStandType === 'option' ? 50 : 35;
+    const height = newStandType === 'sponsor' ? 40 : newStandType === 'option' ? 45 : 30;
+
+    const encodedX = Math.round(point.x) + width / 1000;
+    const encodedY = Math.round(point.y) + height / 1000;
+
+    const newStand = {
+      id: newId,
+      zone: newStandType,
+      surface,
+      x: encodedX,
+      y: encodedY,
+      packCompatible: 'all',
+    };
+
+    try {
+      setIsSaving(true);
+      setMessage('');
+      const created = await createStand(newStand);
+
+      // Decode coordinates of the newly created stand
+      const xVal = created.x || 0;
+      const yVal = created.y || 0;
+      const xInt = Math.floor(xVal);
+      const yInt = Math.floor(yVal);
+      const widthDec = Math.round((xVal - xInt) * 1000);
+      const heightDec = Math.round((yVal - yInt) * 1000);
+      
+      const decodedCreated = {
+        ...created,
+        x: xInt,
+        y: yInt,
+        customWidth: widthDec > 0 ? widthDec : null,
+        customHeight: heightDec > 0 ? heightDec : null,
+      };
+
+      setStands((prev) => sortStands([...prev, enrichStandForDisplay(decodedCreated)]));
+      setMessage(`Stand ${newId} créé avec succès !`);
+      setSelectedStand(newId);
+    } catch (err) {
+      console.error(err);
+      setMessage(err.message || 'Erreur lors de la création du stand.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Delete selected stand
+  const handleDeleteStand = async () => {
+    if (!selectedStand) return;
+    const exposant = standToExposant[selectedStand];
+    
+    if (exposant) {
+      const confirmed = window.confirm(
+        `Ce stand est attribué à "${exposant.raisonSociale}". Supprimer le stand va le désassigner. Continuer ?`
+      );
+      if (!confirmed) return;
+    } else {
+      const confirmed = window.confirm(`Supprimer le stand ${selectedStand} ? Cette action est irréversible.`);
+      if (!confirmed) return;
+    }
+
+    try {
+      setIsSaving(true);
+      await deleteStand(selectedStand);
+      setStands((prev) => prev.filter((s) => s.id !== selectedStand));
+      setMessage(`Stand ${selectedStand} supprimé.`);
+      setSelectedStand(null);
+    } catch (err) {
+      console.error(err);
+      setMessage(err.message || 'Erreur lors de la suppression du stand.');
     } finally {
       setIsSaving(false);
     }
@@ -213,10 +351,26 @@ function FloorPlanPage() {
         setError('');
         const [standsData, exposantsData] = await Promise.all([fetchStands(), fetchExposants()]);
         if (standsData.length === 0) {
-          setError('Aucun stand trouve en base. Lancez le seed Prisma pour initialiser le plan.');
           setStands([]);
         } else {
-          setStands(sortStands(standsData.map(enrichStandForDisplay)));
+          // Decode custom dimensions from coordinate decimal values
+          const decoded = standsData.map((s) => {
+            const xVal = s.x || 0;
+            const yVal = s.y || 0;
+            const xInt = Math.floor(xVal);
+            const yInt = Math.floor(yVal);
+            const widthDec = Math.round((xVal - xInt) * 1000);
+            const heightDec = Math.round((yVal - yInt) * 1000);
+            
+            return {
+              ...s,
+              x: xInt,
+              y: yInt,
+              customWidth: widthDec > 0 ? widthDec : null,
+              customHeight: heightDec > 0 ? heightDec : null,
+            };
+          });
+          setStands(sortStands(decoded.map(enrichStandForDisplay)));
         }
         setExposants(exposantsData);
       } catch (err) {
@@ -236,7 +390,7 @@ function FloorPlanPage() {
       <main className="admin-main">
         <div className="admin-main__header">
           <h1>🗺️ Plan de salle interactif</h1>
-          <p>Modifiez la taille et la position des stands directement sur le plan.</p>
+          <p>Positionnez, ajoutez ou supprimez des stands directement sur le plan.</p>
         </div>
 
         <div className="floor-plan__toolbar">
@@ -266,6 +420,33 @@ function FloorPlanPage() {
           </div>
         </div>
 
+        {/* Add Stand Toolbar */}
+        <div className="floor-plan__add-toolbar">
+          <button
+            className={`floor-plan__add-btn ${addMode ? 'floor-plan__add-btn--active' : ''}`}
+            onClick={() => setAddMode(!addMode)}
+          >
+            {addMode ? '✕ Annuler ajout' : '➕ Ajouter un stand'}
+          </button>
+          {addMode && (
+            <div className="floor-plan__add-options">
+              <span className="floor-plan__add-label">Type :</span>
+              <select
+                value={newStandType}
+                onChange={(e) => setNewStandType(e.target.value)}
+                className="floor-plan__add-select"
+              >
+                <option value="chapiteau">🎪 Chapiteau</option>
+                <option value="sponsor">🏢 Sponsor</option>
+                <option value="option">📐 Espace Nu</option>
+              </select>
+              <span className="floor-plan__add-hint">
+                👆 Cliquez sur le plan pour placer le stand
+              </span>
+            </div>
+          )}
+        </div>
+
         {error && <div className="floor-plan__error">{error}</div>}
         {loading && <div className="floor-plan__loading">Chargement du plan...</div>}
 
@@ -275,44 +456,21 @@ function FloorPlanPage() {
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerUp}
         >
-          <div className="floor-plan__map-container">
+          <div className={`floor-plan__map-container ${addMode ? 'floor-plan__map-container--add-mode' : ''}`}>
             <svg
               ref={svgRef}
               viewBox="0 0 700 640"
               className="floor-plan__svg"
+              onClick={handleMapClick}
             >
-              <circle cx={CX} cy={CY} r={290} fill="none" stroke="#ddd" strokeWidth="1" strokeDasharray="4 4" />
-              <circle cx={CX} cy={CY} r={220} fill="none" stroke="#ddd" strokeWidth="1" strokeDasharray="4 4" />
-              <circle cx={CX} cy={CY} r={140} fill="none" stroke="#ddd" strokeWidth="1" strokeDasharray="4 4" />
-
-              <circle cx={CX} cy={CY} r={60} fill="#f0f7f0" stroke="#c8e6c9" strokeWidth="2" />
-              <text x={CX} y={CY - 8} textAnchor="middle" fill="#4CAF50" fontSize="10" fontWeight="600">
-                SCÈNE
-              </text>
-              <text x={CX} y={CY + 8} textAnchor="middle" fill="#4CAF50" fontSize="8">
-                CENTRALE
-              </text>
-
-              <text x={CX} y={45} textAnchor="middle" fill="#999" fontSize="10" fontWeight="500">
-                ZONE EXTÉRIEURE — 5300 m²
-              </text>
-              <text x={CX} y={CY - 155} textAnchor="middle" fill="#999" fontSize="9">
-                ZONE INTERMÉDIAIRE — 3800 m²
-              </text>
-              <text x={CX} y={CY - 75} textAnchor="middle" fill="#999" fontSize="8">
-                ZONE CENTRALE — 1200 m²
-              </text>
-
-              <line x1={50} y1={CY + 250} x2={130} y2={CY + 170} stroke="#FF6B35" strokeWidth="3" />
-              <text x={40} y={CY + 270} fill="#FF6B35" fontSize="10" fontWeight="600" transform={`rotate(-45, 40, ${CY + 270})`}>
-                ACCÈS
-              </text>
+              {/* Background image of the Les Sablettes venue map — clean version */}
+              <image href="/assets/clean-floor-plan.jpg" x="0" y="0" width="700" height="640" preserveAspectRatio="none" />
 
               {stands.map((stand) => {
   const pos = getStandPosition(stand);
   const { width, height } = getStandSize(stand);
   const exposant = standToExposant[stand.id];
-  const color = exposant ? PACK_COLORS[exposant.packId] || '#ccc' : '#e0e0e0';
+  const color = exposant ? PACK_COLORS[exposant.packId] || '#ccc' : 'transparent';
   const isOccupied = Boolean(exposant);
   const isSelected = selectedStand === stand.id;
   const rotation = stand.angle || 0;
@@ -324,39 +482,46 @@ function FloorPlanPage() {
       onPointerDown={(e) => handlePointerDown(e, stand.id)}
       onClick={(e) => {
         e.stopPropagation();
+        if (addMode) return;
         if (suppressNextClickRef.current) {
           suppressNextClickRef.current = false;
           return;
         }
         setSelectedStand(isSelected ? null : stand.id);
       }}
-      style={{ cursor: 'grab' }}
+      style={{ cursor: addMode ? 'crosshair' : 'pointer' }}
       transform={`translate(${pos.x}, ${pos.y}) rotate(${rotation})`}
     >
+      {/* Invisible hitbox — always present so hover/click works */}
       <rect
         x={-width / 2}
         y={-height / 2}
         width={width}
         height={height}
-        rx={6}
-        fill={color}
-        stroke={isSelected ? '#0B2545' : 'rgba(0,0,0,0.1)'}
-        strokeWidth={isSelected ? 3 : 1}
-        opacity={isOccupied ? 1 : 0.55}
+        rx={4}
+        fill={isOccupied ? color : 'transparent'}
+        fillOpacity={isOccupied ? 0.55 : 0}
+        stroke={isSelected ? '#06D6A0' : 'transparent'}
+        strokeWidth={isSelected ? 2.5 : 0}
+        className="floor-plan__stand-hitbox"
       />
-      <text
-        x={0}
-        y={1}
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fill={isOccupied ? '#fff' : '#666'}
-        fontSize="10"
-        fontWeight="600"
-        fontFamily="var(--font-display)"
-        transform={`rotate(${-rotation})`}
-      >
-        {stand.id}
-      </text>
+      {/* Label — only visible when occupied or selected */}
+      {(isOccupied || isSelected) && (
+        <text
+          x={0}
+          y={1}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fill={isOccupied ? '#fff' : '#06D6A0'}
+          fontSize="8"
+          fontWeight="700"
+          fontFamily="var(--font-display)"
+          transform={`rotate(${-rotation})`}
+          pointerEvents="none"
+        >
+          {stand.id}
+        </text>
+      )}
     </g>
   );
               })}
@@ -379,21 +544,45 @@ function FloorPlanPage() {
                     onChange={handleSurfaceChange}
                   />
                 </div>
-                <div className="floor-plan__detail-row">
-                  <label>Position X</label>
-                  <input
-                    type="number"
-                    value={Math.round(selectedStandData.x ?? getStandPosition(selectedStandData).x)}
-                    readOnly
-                  />
+                <div className="floor-plan__detail-row-duo">
+                  <div className="floor-plan__detail-row">
+                    <label>Largeur</label>
+                    <input
+                      type="number"
+                      min="10"
+                      max="200"
+                      value={Math.round(getStandSize(selectedStandData).width)}
+                      onChange={handleWidthChange}
+                    />
+                  </div>
+                  <div className="floor-plan__detail-row">
+                    <label>Hauteur</label>
+                    <input
+                      type="number"
+                      min="10"
+                      max="200"
+                      value={Math.round(getStandSize(selectedStandData).height)}
+                      onChange={handleHeightChange}
+                    />
+                  </div>
                 </div>
-                <div className="floor-plan__detail-row">
-                  <label>Position Y</label>
-                  <input
-                    type="number"
-                    value={Math.round(selectedStandData.y ?? getStandPosition(selectedStandData).y)}
-                    readOnly
-                  />
+                <div className="floor-plan__detail-row-duo">
+                  <div className="floor-plan__detail-row">
+                    <label>Position X</label>
+                    <input
+                      type="number"
+                      value={Math.round(selectedStandData.x ?? getStandPosition(selectedStandData).x)}
+                      readOnly
+                    />
+                  </div>
+                  <div className="floor-plan__detail-row">
+                    <label>Position Y</label>
+                    <input
+                      type="number"
+                      value={Math.round(selectedStandData.y ?? getStandPosition(selectedStandData).y)}
+                      readOnly
+                    />
+                  </div>
                 </div>
                 {selectedExposant ? (
                   <div className="floor-plan__detail-occupant">
@@ -413,7 +602,7 @@ function FloorPlanPage() {
                 ) : (
                   <div className="floor-plan__detail-free">
                     <span>Libre</span>
-                    <p>Sélectionnez ce stand dans le tableau de bord pour l’assigner.</p>
+                    <p>Sélectionnez ce stand dans le tableau de bord pour l'assigner.</p>
                   </div>
                 )}
                 <button
@@ -421,7 +610,14 @@ function FloorPlanPage() {
                   onClick={handleSelectedStandSave}
                   disabled={isSaving}
                 >
-                  {isSaving ? 'Enregistrement...' : 'Enregistrer modifications'}
+                  {isSaving ? 'Enregistrement...' : '💾 Enregistrer modifications'}
+                </button>
+                <button
+                  className="floor-plan__detail-delete"
+                  onClick={handleDeleteStand}
+                  disabled={isSaving}
+                >
+                  🗑️ Supprimer ce stand
                 </button>
                 {message && <div className="floor-plan__detail-message">{message}</div>}
               </div>

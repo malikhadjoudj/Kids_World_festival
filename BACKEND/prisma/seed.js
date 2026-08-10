@@ -22,15 +22,6 @@ const initialPacks = [
     icon: '🛍️'
   },
   {
-    id: 'espace-vente',
-    name: 'Formule Espace Vente',
-    description: 'Chapiteau aménagé pour la vente directe.',
-    price: 234000,
-    perSquareMeter: false,
-    surface: '9m²',
-    icon: '🛍️'
-  },
-  {
     id: 'espace-nu',
     name: 'Espace Nu',
     description: 'Espace libre à partir de 9m² pour stand personnalisé.',
@@ -77,36 +68,49 @@ const initialPacks = [
   }
 ];
 
-const initialStands = [
-  { id: 'A1', surface: 25, packCompatible: 'all' },
-  { id: 'A2', surface: 25, packCompatible: 'all' },
-  { id: 'A3', surface: 25, packCompatible: 'all' },
-  { id: 'A4', surface: 25, packCompatible: 'all' },
-  { id: 'A5', surface: 25, packCompatible: 'all' },
-  { id: 'A6', surface: 25, packCompatible: 'all' },
-  { id: 'A7', surface: 25, packCompatible: 'all' },
-  { id: 'A8', surface: 25, packCompatible: 'all' },
-  { id: 'A9', surface: 25, packCompatible: 'all' },
-  { id: 'A10', surface: 25, packCompatible: 'all' },
-  { id: 'A11', surface: 25, packCompatible: 'all' },
-  { id: 'A12', surface: 25, packCompatible: 'all' },
-  { id: 'B1', surface: 18, packCompatible: 'all' },
-  { id: 'B2', surface: 18, packCompatible: 'all' },
-  { id: 'B3', surface: 18, packCompatible: 'all' },
-  { id: 'B4', surface: 18, packCompatible: 'all' },
-  { id: 'B5', surface: 18, packCompatible: 'all' },
-  { id: 'B6', surface: 18, packCompatible: 'all' },
-  { id: 'B7', surface: 18, packCompatible: 'all' },
-  { id: 'B8', surface: 18, packCompatible: 'all' },
-  { id: 'B9', surface: 18, packCompatible: 'all' },
-  { id: 'B10', surface: 18, packCompatible: 'all' },
-  { id: 'C1', surface: 50, packCompatible: 'all' },
-  { id: 'C2', surface: 50, packCompatible: 'all' },
-  { id: 'C3', surface: 50, packCompatible: 'all' },
-  { id: 'C4', surface: 50, packCompatible: 'all' },
-  { id: 'C5', surface: 50, packCompatible: 'all' },
-  { id: 'C6', surface: 50, packCompatible: 'all' },
-];
+const initialStands = [];
+
+// 1. Sponsor Stands (SP01 - SP20) - 50m²
+for (let i = 1; i <= 7; i++) {
+  initialStands.push({ id: `SP0${i}`, surface: 50, packCompatible: 'all', x: 180 + i * 50, y: 170 });
+}
+for (let i = 8; i <= 9; i++) {
+  initialStands.push({ id: `SP0${i}`, surface: 50, packCompatible: 'all', x: 580, y: 150 + (i - 7) * 50 });
+}
+for (let i = 10; i <= 11; i++) {
+  initialStands.push({ id: `SP${i}`, surface: 50, packCompatible: 'all', x: 580, y: 150 + (i - 7) * 50 });
+}
+for (let i = 12; i <= 16; i++) {
+  initialStands.push({ id: `SP${i}`, surface: 50, packCompatible: 'all', x: 230 + (i - 11) * 50, y: 430 });
+}
+for (let i = 17; i <= 20; i++) {
+  initialStands.push({ id: `SP${i}`, surface: 50, packCompatible: 'all', x: 140, y: 220 + (i - 16) * 45 });
+}
+
+// 2. Chapiteaux (C01 - C25) - 12m²
+for (let i = 1; i <= 5; i++) {
+  initialStands.push({ id: `C0${i}`, surface: 12, packCompatible: 'all', x: 160 + i * 25, y: 470 });
+}
+for (let i = 6; i <= 9; i++) {
+  initialStands.push({ id: `C0${i}`, surface: 12, packCompatible: 'all', x: 160 + (i - 5) * 25, y: 505 });
+}
+initialStands.push({ id: 'C10', surface: 12, packCompatible: 'all', x: 160 + 5 * 25, y: 505 });
+
+for (let i = 11; i <= 15; i++) {
+  initialStands.push({ id: `C${i}`, surface: 12, packCompatible: 'all', x: 480 + (i - 10) * 22, y: 360 });
+}
+for (let i = 16; i <= 20; i++) {
+  initialStands.push({ id: `C${i}`, surface: 12, packCompatible: 'all', x: 490 + (i - 15) * 22, y: 385 });
+}
+for (let i = 21; i <= 25; i++) {
+  initialStands.push({ id: `C${i}`, surface: 12, packCompatible: 'all', x: 510 + (i - 20) * 22, y: 410 });
+}
+
+// 3. Espace Nu (NU01 - NU10) - 30m²
+for (let i = 1; i <= 9; i++) {
+  initialStands.push({ id: `NU0${i}`, surface: 30, packCompatible: 'all', x: 140 + i * 35, y: 120 });
+}
+initialStands.push({ id: 'NU10', surface: 30, packCompatible: 'all', x: 140 + 10 * 35, y: 120 });
 
 async function main() {
   console.log('Start seeding...');

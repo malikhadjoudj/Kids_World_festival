@@ -28,7 +28,7 @@ function EventLocationSection() {
                 <span className="event-location__icon">📍</span>
                 <div>
                   <span className="event-location__meta-label">{t('eventLocation.placeLabel')}</span>
-                  <span className="event-location__meta-value">Écoloh — La Sablette, Alger</span>
+                  <span className="event-location__meta-value">Écoloh — Les Sablettes, Alger</span>
                 </div>
               </div>
             </div>
@@ -38,7 +38,7 @@ function EventLocationSection() {
             </p>
 
             <a
-              href="https://www.google.com/maps/search/?api=1&query=Ecoloh+La+Sablette+Alger"
+              href="https://maps.app.goo.gl/9frpw89UJkMU6MVL8?g_st=iw"
               target="_blank"
               rel="noreferrer"
               className="event-location__map-link"
@@ -49,7 +49,7 @@ function EventLocationSection() {
 
           {/* Photo */}
           <div className="event-location__photo">
-            <img src="/assets/ecoloh-sablette.png" alt="Parc Écoloh, La Sablette, Alger" />
+            <img src="/assets/ecoloh-sablette.png" alt="Parc Écoloh, Les Sablettes, Alger" />
           </div>
         </div>
       </div>
