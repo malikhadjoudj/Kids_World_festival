@@ -165,8 +165,8 @@ function DocumentTarificationPage() {
     }
 
     if (needsManualSurface && (!surface || Number.parseInt(surface, 10) < 9)) {
-      setValidationErrors((prev) => ({ ...prev, surface: 'Surface invalide (9 m² minimum).' }));
-      setSaveMessage('Veuillez indiquer une surface valide de 9 m2 minimum.');
+      setValidationErrors((prev) => ({ ...prev, surface: 'Surface invalide (12 m² minimum).' }));
+      setSaveMessage('Veuillez indiquer une surface valide de 12 m2 minimum.');
       return;
     }
 
@@ -422,7 +422,7 @@ function DocumentTarificationPage() {
                   setValidationErrors((prev) => ({ ...prev, surface: '' }));
                   setSaveMessage('');
                 }}
-                placeholder="Minimum 9 m²"
+                placeholder="Minimum 12 m²"
               />
               {validationErrors.surface && <p className="doc-field-error">{validationErrors.surface}</p>}
             </div>
