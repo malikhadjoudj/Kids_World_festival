@@ -454,13 +454,37 @@
   .doc-a4 {
     width: 100%;
     max-width: 794px;
+    overflow: visible;
   }
 
   .doc-outer {
     padding: 20px 8px;
+    overflow-x: auto;
   }
 
   .doc-nav__btn-secondary {
     display: none;
+  }
+
+  .doc-field-inline {
+    flex-wrap: wrap;
+  }
+
+  .doc-field-label {
+    white-space: normal;
+  }
+
+  .doc-packs-section {
+    padding: 14px 16px;
+  }
+
+  .doc-pack-row {
+    flex-direction: column;
+  }
+
+  .doc-pack-row .doc-pack-label,
+  .doc-pack-row--option .doc-pack-label {
+    min-width: 0;
+    width: 100%;
   }
 }

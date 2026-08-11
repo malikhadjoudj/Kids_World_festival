@@ -65,7 +65,7 @@ export const PACKS = [
     color: 'var(--color-tertiary)',
     features: [
       'Intégration de votre logo sur le photocall officiel et les espaces de prise de photos',
-      'Espace d’activation ',
+      'Espace d’activation  pouvanta acceuillir un stand jusqu/a 60 m²',
       'Diffusion de votre spot sur les écrans géants',
       'Créneau d’animation sur scène (démonstration, tombola ou jeu concours)',
       'démonstration, une tombola, un jeu concours ou une prise de parole de votre marque',
@@ -89,7 +89,7 @@ export const PACKS = [
       'Logo sur la scène principale et panneaux de signalétique',
       "Diffusion de votre spot publicitaire sur le grand écran géant tout au long de l'événement.",
       '2 créneaux de 15 min pour animation de marque',
-      'Espace d’exposition  pour votre activation de marque, + chapiteau  dédié à la vente ou à la présentation de vos produits.',
+      'Espace d’exposition de 150 m²  pour votre activation de marque, + chapiteau de 25 m² dédié à la vente ou à la présentation de vos produits.',
     ],
     popular: false,
   },

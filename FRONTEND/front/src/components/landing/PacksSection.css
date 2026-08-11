@@ -314,7 +314,8 @@
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1024px) {
-  .packs__grid {
+  .packs__grid,
+  .packs__sponsor-section .packs__grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -328,7 +329,8 @@
 }
 
 @media (max-width: 600px) {
-  .packs__grid {
+  .packs__grid,
+  .packs__sponsor-section .packs__grid {
     grid-template-columns: 1fr;
     max-width: 400px;
     margin: 0 auto;

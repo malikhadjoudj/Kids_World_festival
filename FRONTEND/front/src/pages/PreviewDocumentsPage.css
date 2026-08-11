@@ -58,6 +58,27 @@
   overflow: hidden; /* Prevent spillover */
 }
 
+/* ---- Responsive for small screens (screen only, not print) ---- */
+@media screen and (max-width: 860px) {
+  .printable-area {
+    padding: 1rem 0.5rem;
+    overflow-x: auto;
+  }
+
+  .print-page {
+    width: 100%;
+    max-width: 210mm;
+    height: auto;
+    min-height: 297mm;
+    padding: 6mm 6mm 24mm;
+    overflow: visible;
+  }
+
+  .print-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Bon de commande specific print styles */
 .print-grid {
   display: grid;
