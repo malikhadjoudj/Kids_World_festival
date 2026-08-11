@@ -24,10 +24,10 @@ const initialPacks = [
   {
     id: 'espace-nu',
     name: 'Espace Nu',
-    description: 'Espace libre à partir de 9m² pour stand personnalisé.',
+    description: 'Espace libre à partir de 12m² pour stand personnalisé.',
     price: 12000,
     perSquareMeter: true,
-    surface: 'min 9m²',
+    surface: 'min 12m²',
     icon: '📐'
   },
   {

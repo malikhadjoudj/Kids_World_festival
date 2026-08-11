@@ -6,7 +6,7 @@ import {
   getStoredPackSelection,
   setStoredExposantId,
 } from '../services/api';
-import { DROITS_INTERVENTION, getPackLineItems, getSelectedPacks, normalizePackIds } from '../constants/packs';
+import { DROITS_INTERVENTION, getPackLineItems, getSelectedPacks, normalizePackIds, parseSurfaces } from '../constants/packs';
 import Button from '../components/common/Button';
 import './PreviewDocumentsPage.css';
 
@@ -99,24 +99,19 @@ function PreviewDocumentsPage() {
     exposant.packIds ||
     exposant.packId
   );
-  // The backend only persists a single "surface" value for the whole dossier
-  // (the primary pack's chosen surface), so it's reapplied to every pack in
-  // the selection that needs one, matching how it was saved at submission time.
-  // Chaque pack garde sa propre surface (stockée en JSON dans packSurfaces).
-  // On garde exposant.surface comme repli pour les anciens dossiers créés
-  // avant ce correctif (une seule surface globale à l'époque).
-  const savedPackSurfaces = (() => {
-    try {
-      return exposant.packSurfaces ? JSON.parse(exposant.packSurfaces) : {};
-    } catch {
-      return {};
-    }
-  })();
-  const invoiceSurfaces = Object.fromEntries(
-    getSelectedPacks(selectedPackIds)
-      .filter((pack) => pack.perSquareMeter || pack.requiresSurface || pack.surfaceTiers)
-      .map((pack) => [pack.id, savedPackSurfaces[pack.id] ?? exposant.surface])
-  );
+  // Prefer the per-pack surfaces saved at submission time (handles combining
+  // Discover & Fun / Sell & Win with different m² each). Older dossiers saved
+  // before this existed only have the single `surface` field — fall back to
+  // reapplying that one value to every pack that needs a surface, same as
+  // it was calculated at the time.
+  const savedPackSurfaces = parseSurfaces(exposant.packSurfaces);
+  const invoiceSurfaces = Object.keys(savedPackSurfaces).length > 0
+    ? savedPackSurfaces
+    : Object.fromEntries(
+        getSelectedPacks(selectedPackIds)
+          .filter((pack) => pack.perSquareMeter || pack.requiresSurface || pack.surfaceTiers)
+          .map((pack) => [pack.id, exposant.surface])
+      );
   const invoiceLineItems = getPackLineItems(selectedPackIds, invoiceSurfaces);
   const tarificationData = {
     nomPrenom: exposant.documentTarificationNomPrenom || exposant.nomPrenom || '',
@@ -226,7 +221,7 @@ function PreviewDocumentsPage() {
                   <td className="col-ref">{index + 1}</td>
                   <td className="col-des">
                     <div style={{ fontWeight: '600', marginBottom: '4px' }}>
-                      {pack?.name} {invoiceSurfaces[pack.id] ? `(${invoiceSurfaces[pack.id]} m²)` : ''}
+                      {pack?.name} {exposant.surface ? `(${exposant.surface} m²)` : ''}
                     </div>
                   </td>
                   <td className="col-qte" style={{ verticalAlign: 'top' }}>{String(lineItem.quantity).padStart(2, '0')}</td>
