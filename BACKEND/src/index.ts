@@ -92,7 +92,22 @@ app.post('/api/exposants', async (req, res) => {
         nis: data.nis,
         activite: data.activite,
         packId: data.packId,
-        surface: data.surface,
+         selectedPackIds: Array.isArray(data.selectedPackIds)
+          ? data.selectedPackIds.join(',')
+          : data.selectedPackIds || data.packId || '',
+          // Surface de chaque pack
+        // Exemple :
+        // {"discover-fun":12,"sell-win":24}
+        packSurfaces:
+          typeof data.packSurfaces === 'string'
+            ? data.packSurfaces
+            : JSON.stringify(data.packSurfaces || {}),
+
+        // Ancienne valeur conservée pour compatibilité
+        surface: data.surface
+          ? parseInt(data.surface, 10)
+          : null,
+        
         totalHT: data.totalHT,
         tva: data.tva,
         totalTTC: data.totalTTC,
@@ -126,10 +141,40 @@ app.patch('/api/exposants/:id', async (req, res) => {
         nis: data.nis,
         activite: data.activite,
         packId: data.packId,
-        surface: data.surface,
-        totalHT: data.totalHT,
-        tva: data.tva,
-        totalTTC: data.totalTTC,
+
+selectedPackIds:
+  data.selectedPackIds !== undefined
+    ? Array.isArray(data.selectedPackIds)
+      ? data.selectedPackIds.join(',')
+      : data.selectedPackIds
+    : undefined,
+
+packSurfaces:
+  data.packSurfaces !== undefined
+    ? typeof data.packSurfaces === 'string'
+      ? data.packSurfaces
+      : JSON.stringify(data.packSurfaces || {})
+    : undefined,
+
+surface:
+  data.surface !== undefined && data.surface !== null
+    ? parseInt(data.surface, 10)
+    : undefined,
+
+totalHT:
+  data.totalHT !== undefined
+    ? parseFloat(data.totalHT)
+    : undefined,
+
+tva:
+  data.tva !== undefined
+    ? parseFloat(data.tva)
+    : undefined,
+
+totalTTC:
+  data.totalTTC !== undefined
+    ? parseFloat(data.totalTTC)
+    : undefined,
         documentTarificationNomPrenom: data.documentTarificationNomPrenom,
         documentTarificationFonction: data.documentTarificationFonction,
         documentTarificationRaisonSociale: data.documentTarificationRaisonSociale,
