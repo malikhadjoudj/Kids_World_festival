@@ -188,6 +188,32 @@
   border-color: var(--color-secondary-dark);
 }
 
+.admin-danger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px var(--space-md);
+  border: 1px solid var(--color-danger, #E63946);
+  border-radius: var(--radius-full);
+  background: white;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--color-danger, #E63946);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.admin-danger-btn:hover:not(:disabled) {
+  background: var(--color-danger, #E63946);
+  color: white;
+}
+
+.admin-danger-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Table */
 .admin-table-wrap {
   background: white;

@@ -104,6 +104,18 @@ export const fetchExposants = async () => {
   return res.json();
 };
 
+// One-time wipe of all test dossiers (DB rows + signed PDFs) before launch.
+export const resetTestData = async () => {
+  const res = await authFetch(`${API_BASE}/exposants`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ confirm: 'SUPPRIMER' }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Erreur lors de la réinitialisation.');
+  return data;
+};
+
 export const fetchExposantById = async (id) => {
   const res = await fetch(`${API_BASE}/exposants/${id}`);
   if (!res.ok) throw new Error('Erreur lors de la récupération de l\'exposant.');

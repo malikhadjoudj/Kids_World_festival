@@ -8,6 +8,7 @@ import {
   getSelectedPacks,
   normalizePackIds,
   parseSurfaces,
+  serializeSurfaces,
 } from '../constants/packs';
 import { createExposant, setStoredExposantId, setStoredPackSelection } from '../services/api';
 import './DocumentTarificationPage.css';
@@ -181,7 +182,7 @@ function DocumentTarificationPage() {
         selectedPackIds: selectedPackIds.join(','),
         packIds: selectedPackIds,
         surface: primarySurfaceValue ? Number.parseInt(primarySurfaceValue, 10) : null,
-        packSurfaces: JSON.stringify(surfaces),
+        packSurfaces: serializeSurfaces(surfaces),
         totalHT: prices.totaleHT,
         tva: prices.tva,
         totalTTC: prices.totaleTTC,
@@ -216,9 +217,9 @@ function DocumentTarificationPage() {
       case 'sell-win':
         return { title: 'PACK SELL & WIN', price: tierPrice, desc: 'Vente — Incluant : la surface + raccordement électrique + 1 table + 3 chaises', surface: tierSurfaceLabel };
       case 'pack-italie':
-        return { title: 'PACK SPONSOR ITALIE', price: '1 200 000,00 DA HT', desc: 'Logo sur photocall, espace activation , spot publicitaire et animation sur scène.', surface: 'Visibilité premium pour votre marque' };
+        return { title: 'PACK SPONSOR ITALIE', price: '1 200 000,00 DA HT', desc: 'Logo sur photocall, espace activation 60 m², spot publicitaire et animation sur scène.', surface: 'Visibilité premium pour votre marque' };
       case 'pack-turquie':
-        return { title: 'PACK SPONSOR TURQUIE', price: '2 200 000,00 DA HT', desc: 'Grand format publicitaire, Pop-Up d’accueil, scène principale et deux créneaux d’animation.', surface: 'Espace d’exposition  + chapiteau ' };
+        return { title: 'PACK SPONSOR TURQUIE', price: '2 200 000,00 DA HT', desc: 'Grand format publicitaire, Pop-Up d’accueil, scène principale et deux créneaux d’animation.', surface: 'Espace d’exposition 150 m² + chapiteau 25 m²' };
       case 'pack-algerie':
         return { title: 'PACK SPONSOR ALGÉRIE', price: '4 000 000,00 DA HT', desc: 'Branding exclusif, Pop-Up d’entrée, habillage des allées et présence sur la communication officielle.', surface: 'Activation premium' };
       case 'espace-nu':

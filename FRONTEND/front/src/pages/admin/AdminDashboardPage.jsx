@@ -8,6 +8,7 @@ import {
   fetchExposants,
   fetchPacks,
   fetchStands,
+  resetTestData,
 } from '../../services/api';
 import { getStatutLabel } from '../../constants/admin';
 import { PACKS as FALLBACK_PACKS } from '../../constants/packs';
@@ -86,6 +87,10 @@ function AdminDashboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [previewExposant, setPreviewExposant] = useState(null);
   const [assignExposant, setAssignExposant] = useState(null);
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetConfirmText, setResetConfirmText] = useState('');
+  const [isResetting, setIsResetting] = useState(false);
+  const [resetError, setResetError] = useState('');
 
   const loadAdminData = async () => {
     setLoading(true);
@@ -186,6 +191,24 @@ function AdminDashboardPage() {
 
   const handleRemoveStand = async (exposantId) => {
     await handleAssignStand(exposantId, null);
+  };
+
+  const handleResetTestData = async () => {
+    if (resetConfirmText !== 'SUPPRIMER') return;
+
+    setIsResetting(true);
+    setResetError('');
+    try {
+      await resetTestData();
+      setShowResetModal(false);
+      setResetConfirmText('');
+      await loadAdminData();
+    } catch (err) {
+      console.error(err);
+      setResetError(err.message || 'Impossible de réinitialiser les données de test.');
+    } finally {
+      setIsResetting(false);
+    }
   };
 
   const exportCSV = () => {
@@ -304,6 +327,13 @@ function AdminDashboardPage() {
             <button className="admin-export" onClick={exportCSV} disabled={loading}>
               Exporter CSV
             </button>
+            <button
+              className="admin-danger-btn"
+              onClick={() => setShowResetModal(true)}
+              disabled={loading}
+            >
+              Réinitialiser les données de test
+            </button>
           </div>
         </div>
 
@@ -325,9 +355,6 @@ function AdminDashboardPage() {
             <tbody>
               {filtered.map((exposant, i) => {
                 const packLabel = getPackNames(exposant, packs);
-                <td>
-  {exposant.surface ? `${exposant.surface} m²` : '—'}
-</td>
                 const statut = getStatutLabel(exposant.statutContrat);
 
                 return (
@@ -345,6 +372,9 @@ function AdminDashboardPage() {
                       <span className="admin-table__pack-badge">
                         {packLabel}
                       </span>
+                    </td>
+                    <td>
+                      {exposant.surface ? `${exposant.surface} m²` : '—'}
                     </td>
                     <td>
                       <span
@@ -422,6 +452,64 @@ function AdminDashboardPage() {
             onAssign={handleAssignStand}
             onClose={() => setAssignExposant(null)}
           />
+        )}
+
+        {showResetModal && (
+          <div
+            className="modal-overlay"
+            onClick={() => {
+              if (!isResetting) {
+                setShowResetModal(false);
+                setResetConfirmText('');
+                setResetError('');
+              }
+            }}
+          >
+            <div className="modal-content" style={{ padding: '2rem', maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
+              <h2 style={{ marginTop: 0 }}>⚠️ Réinitialiser les données de test</h2>
+              <p style={{ color: 'var(--color-text-muted)' }}>
+                Cette action supprime <strong>définitivement</strong> tous les dossiers exposants
+                actuels (données + PDF signés) et remet tous les stands à "disponible".
+                Les packs et les stands eux-mêmes ne sont pas supprimés.
+              </p>
+              <p style={{ color: 'var(--color-text-muted)' }}>
+                Cette action est <strong>irréversible</strong>. Pour confirmer, tape{' '}
+                <strong>SUPPRIMER</strong> ci-dessous :
+              </p>
+              <input
+                type="text"
+                value={resetConfirmText}
+                onChange={(e) => setResetConfirmText(e.target.value)}
+                placeholder="SUPPRIMER"
+                className="doc-field-input"
+                style={{ width: '100%', marginBottom: '1rem' }}
+                disabled={isResetting}
+              />
+              {resetError && (
+                <p style={{ color: 'var(--color-danger)', marginBottom: '1rem' }}>{resetError}</p>
+              )}
+              <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+                <button
+                  className="admin-export"
+                  onClick={() => {
+                    setShowResetModal(false);
+                    setResetConfirmText('');
+                    setResetError('');
+                  }}
+                  disabled={isResetting}
+                >
+                  Annuler
+                </button>
+                <button
+                  className="admin-danger-btn"
+                  onClick={handleResetTestData}
+                  disabled={resetConfirmText !== 'SUPPRIMER' || isResetting}
+                >
+                  {isResetting ? 'Suppression...' : 'Confirmer la suppression'}
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </main>
     </div>

@@ -108,7 +108,7 @@ app.post('/api/admin/login', (req, res) => {
 const uploadsDir = process.env.RAILWAY_VOLUME_MOUNT_PATH || process.env.UPLOADS_DIR || path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 app.use('/uploads', express.static(uploadsDir));
- 
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const exposantDir = path.join(uploadsDir, req.params.id);
@@ -257,6 +257,38 @@ app.get('/api/exposants',requireAdmin, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Impossible de récupérer les exposants.' });
+  }
+});
+
+// DELETE all exposants — one-time "reset test data" wipe before launch.
+// Requires an explicit confirmation string in the body to avoid accidents.
+// Deletes every Exposant row, resets every Stand back to "disponible",
+// and empties the uploads folder (signed PDFs) on disk.
+app.delete('/api/exposants', requireAdmin, async (req, res) => {
+  if (req.body?.confirm !== 'SUPPRIMER') {
+    return res.status(400).json({ error: 'Confirmation manquante ou incorrecte.' });
+  }
+
+  try {
+    const { count: deletedExposants } = await prisma.exposant.deleteMany({});
+    const { count: resetStands } = await prisma.stand.updateMany({
+      data: { status: 'disponible' },
+    });
+
+    let deletedFolders = 0;
+    if (fs.existsSync(uploadsDir)) {
+      const entries = fs.readdirSync(uploadsDir, { withFileTypes: true });
+      entries.forEach((entry) => {
+        const entryPath = path.join(uploadsDir, entry.name);
+        fs.rmSync(entryPath, { recursive: true, force: true });
+        deletedFolders += 1;
+      });
+    }
+
+    res.json({ success: true, deletedExposants, resetStands, deletedFolders });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible de réinitialiser les données de test.' });
   }
 });
 
