@@ -221,7 +221,7 @@ function PreviewDocumentsPage() {
                   <td className="col-ref">{index + 1}</td>
                   <td className="col-des">
                     <div style={{ fontWeight: '600', marginBottom: '4px' }}>
-                      {pack?.name} {exposant.surface ? `(${exposant.surface} m²)` : ''}
+                      {pack?.name} {invoiceSurfaces[pack.id] ? `(${invoiceSurfaces[pack.id]} m²)` : ''}
                     </div>
                   </td>
                   <td className="col-qte" style={{ verticalAlign: 'top' }}>{String(lineItem.quantity).padStart(2, '0')}</td>
