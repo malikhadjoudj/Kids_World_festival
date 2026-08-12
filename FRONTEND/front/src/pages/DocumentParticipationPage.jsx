@@ -201,9 +201,9 @@ function DocumentParticipationPage() {
             <div className="part-article">
               <h2 className="part-article__title">ARTICLE 4 : CONDITIONS DE RÈGLEMENT</h2>
               <ul className="part-article__list">
-                <li>Pour un espace avec chapiteaux, le paiement s'effectuera à 50 % après avoir reçu le bon de commande.</li>
-                <li>Pour un espace nu, le paiement s'effectuera à 100 % après avoir reçu le bon de commande.</li>
-                <li>Pour les packs sponsoring, le paiement s'effectuera à 100 % après avoir reçu le bon de commande.</li>
+                <li>Pour un espace avec chapiteaux, le paiement s'effectuera à 50% après avoir reçu le bon de commande.</li>
+                <li>Pour un espace nu, le paiement s'effectuera à 100% après avoir reçu le bon de commande.</li>
+                <li>Pour les packs sponsoring, le paiement s'effectuera à 100% après avoir reçu le bon de commande.</li>
               </ul>
             </div>
 
