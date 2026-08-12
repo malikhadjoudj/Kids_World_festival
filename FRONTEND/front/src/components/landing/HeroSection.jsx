@@ -9,7 +9,7 @@ function HeroSection() {
   const STATS = [
     { value: '3', label: t('hero.statSponsor') },
     { value: '+25 000/J', label: t('hero.statVisiteurs') },
-    { value: '4', label: t('hero.statFormules') },
+    { value: '3', label: t('hero.statFormules') },
   ];
   const particlesRef = useRef(null);
 

@@ -7,7 +7,7 @@ const COUNTER_TARGETS = [
   { target: 4, suffix: ' jours' },
   { target: 25000, prefix: '+', suffix: '/J' },
   { target: 3, suffix: '' },
-  { target: 4, suffix: '' },
+  { target: 3, suffix: '' },
 ];
 
 function AnimatedCounter({ target, prefix = '', suffix, label }) {
