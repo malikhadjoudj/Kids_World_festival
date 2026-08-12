@@ -187,7 +187,7 @@ function DocumentParticipationPage() {
               <p className="part-article__subhead">Stands personnalisés (non aménagés) :</p>
               <ul className="part-article__list">
                 <li>Accès au site : à partir du 13 septembre 2026.</li>
-                <li>Les exposants disposent des 14, 15 septembre et le 15 septembre pour finaliser leurs installations.</li>
+                <li>Les exposants disposent des 14, 15 septembre pour finaliser leurs installations.</li>
                 <li>Toute installation est strictement interdite à partir du 16 septembre 2026 (jour d'ouverture du festival).</li>
               </ul>
               <p className="part-article__subhead part-article__subhead--bold">DÉSINSTALLATION :</p>
