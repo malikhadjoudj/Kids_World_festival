@@ -29,7 +29,7 @@
   "packs": {
     "sectionBadge": "📦 Nos Formules",
     "sectionTitle": "Choisissez la formule qui vous correspond",
-    "sectionSubtitle": "4 offres pensées pour s'adapter à chaque besoin, de l'espace clé en main à la liberté totale de configuration.",
+    "sectionSubtitle": "3 offres pensées pour s'adapter à chaque besoin, de l'espace clé en main à la liberté totale de configuration.",
     "sponsorBadge": "🚀 Nos Packs Sponsor",
     "sponsorTitle": "Découvrez les offres de sponsoring",
     "sponsorSubtitle": "3 packs sponsor dédiés pour renforcer votre visibilité sur le festival.",
@@ -65,7 +65,7 @@
 "howItWorks": {
     "badge": "🔄 Simple & Rapide",
     "title": "Comment ça marche ?",
-    "subtitle": "En 3 étapes simples, réservez votre stand au KIDS WORLD FESTIVAL.",
+    "subtitle": "En 4 étapes simples, réservez votre stand au KIDS WORLD FESTIVAL.",
     "steps": [
       {
         "title": "Remplissez le formulaire",
@@ -73,7 +73,7 @@
       },
       {
         "title": "Choisissez votre formule",
-        "description": "Sélectionnez parmi nos 4 offres celle qui correspond le mieux à votre projet et votre budget."
+        "description": "Sélectionnez parmi nos 3 offres celle qui correspond le mieux à votre projet et votre budget."
       },
       {
         "title": "Consulter un aperçu des contrats",

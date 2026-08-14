@@ -69,13 +69,7 @@ function Navbar() {
           </Button>
         </div>
 
-        {/* CTA Desktop */}
-        <div className="navbar__cta">
-          <Button variant="primary" size="sm" href="#formules">
-            Réserver votre stand
-          </Button>
-        </div>
-
+      
         {/* Mobile burger */}
         <button
           className={`navbar__burger ${menuOpen ? 'navbar__burger--open' : ''}`}
