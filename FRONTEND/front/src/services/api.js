@@ -202,7 +202,48 @@ export const uploadDocuments = async (exposantId, documentTarificationFile, docu
   }
   return res.json();
 };
-
+//─── VISITES (tracking anonyme) ────────────────────────────
+ 
+const VISITOR_ID_KEY = 'kwf_visitor_id';
+ 
+const getOrCreateVisitorId = () => {
+  let id = localStorage.getItem(VISITOR_ID_KEY);
+  if (!id) {
+    id = (typeof crypto !== 'undefined' && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : `visitor-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem(VISITOR_ID_KEY, id);
+  }
+  return id;
+};
+ 
+// Envoie un ping de visite au backend. Ne doit jamais bloquer ni faire planter
+// la navigation du visiteur si ça échoue (pas d'erreur remontée à l'appelant).
+export const trackVisit = (page) => {
+  try {
+    const visitorId = getOrCreateVisitorId();
+    fetch(`${API_BASE}/visites`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ visitorId, page }),
+    }).catch(() => {});
+  } catch {
+    // silencieux : le tracking ne doit jamais impacter l'expérience utilisateur
+  }
+};
+ 
+export const fetchVisites = async () => {
+  const res = await authFetch(`${API_BASE}/visites`);
+  if (!res.ok) throw new Error('Erreur lors de la récupération des visites.');
+  return res.json();
+};
+ 
+export const fetchVisitesStats = async () => {
+  const res = await authFetch(`${API_BASE}/visites/stats`);
+  if (!res.ok) throw new Error('Erreur lors de la récupération des statistiques de visites.');
+  return res.json();
+};
+ 
 // ─── STANDS ───────────────────────────────────────────────
 
 export const fetchStands = async () => {

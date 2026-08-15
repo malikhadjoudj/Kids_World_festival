@@ -64,4 +64,50 @@ async function sendAdminNotification(exposant, event) {
   }
 }
 
-module.exports = { sendAdminNotification };
+async function sendNewVisitorNotification(page, date) {
+  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
+  if (!resend) {
+    console.warn('⚠️  RESEND_API_KEY non configuré, notification de visite non envoyée.');
+    return;
+  }
+  if (!adminEmail) {
+    console.warn('⚠️  ADMIN_NOTIFICATION_EMAIL non configuré, notification de visite non envoyée.');
+    return;
+  }
+
+  const dateLabel = new Date(date).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' });
+
+  const subject = `👀 Kids World Festival — Nouveau visiteur sur la plateforme`;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; color: #222; max-width: 500px;">
+      <h2 style="color: #0B2545;">Nouveau visiteur</h2>
+      <p>Une personne encore jamais vue vient de consulter la plateforme Kids World Festival, sans (pour l'instant) remplir de dossier.</p>
+      <table style="border-collapse: collapse; width: 100%; margin-top: 12px;">
+        <tr><td style="padding: 4px 8px; color: #666;">Page visitée</td><td style="padding: 4px 8px;"><strong>${page}</strong></td></tr>
+        <tr><td style="padding: 4px 8px; color: #666;">Date</td><td style="padding: 4px 8px;">${dateLabel}</td></tr>
+      </table>
+      <p style="margin-top: 16px;">
+        <a href="${process.env.ADMIN_DASHBOARD_URL || '#'}" style="color: #fff; background: #0B2545; padding: 8px 16px; border-radius: 6px; text-decoration: none;">
+          Voir toutes les visites
+        </a>
+      </p>
+    </div>
+  `;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: process.env.MAIL_FROM || 'onboarding@resend.dev',
+      to: adminEmail,
+      subject,
+      html,
+   });
+    if (error) throw new Error(error.message || JSON.stringify(error));
+    console.log(`✅ Notification de nouveau visiteur envoyée à ${adminEmail}`);
+  } catch (error) {
+    // On ne bloque jamais la requête principale si l'email échoue.
+    console.error('❌ Erreur lors de l\'envoi de la notification de visite :', error.message);
+  }
+}
+
+module.exports = { sendAdminNotification, sendNewVisitorNotification };

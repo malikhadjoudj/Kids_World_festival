@@ -43,6 +43,15 @@ function AdminSidebar() {
           <span className="admin-sidebar__link-icon">🗺️</span>
           Plan de salle
         </NavLink>
+        <NavLink
+          to="/admin/visites"
+          className={({ isActive }) =>
+            `admin-sidebar__link ${isActive ? 'admin-sidebar__link--active' : ''}`
+          }
+        >
+          <span className="admin-sidebar__link-icon">👀</span>
+          Visites
+        </NavLink>
       </nav>
 
       <div className="admin-sidebar__footer">

@@ -5,7 +5,7 @@ const { PrismaClient } = require('@prisma/client');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { sendAdminNotification } = require('./mailer');
+const { sendAdminNotification, sendNewVisitorNotification } = require('./mailer');
 const { login, requireAdmin } = require('./auth');
 const app = express();
 const prisma = new PrismaClient();
@@ -578,6 +578,79 @@ app.post(
     }
   }
 );
+// ─── VISITES (tracking anonyme des visiteurs) ─────────────
+// Enregistre chaque chargement de page. Envoie une notification admin
+// uniquement pour la toute première visite d'un visitorId donné
+// (identifié via un uuid stocké côté navigateur dans le localStorage).
+ 
+app.post('/api/visites', async (req, res) => {
+  const { visitorId, page } = req.body || {};
+ 
+  if (!visitorId || !page) {
+    return res.status(400).json({ error: 'visitorId et page sont requis.' });
+  }
+ 
+  try {
+    const existingVisit = await prisma.visite.findFirst({
+      where: { visitorId },
+      select: { id: true },
+    });
+    const isNewVisitor = !existingVisit;
+ 
+    const visite = await prisma.visite.create({
+      data: { visitorId, page, isNewVisitor },
+    });
+ 
+    if (isNewVisitor) {
+      sendNewVisitorNotification(page, visite.createdAt);
+    }
+ 
+    res.status(201).json(visite);
+  } catch (error) {
+    console.error(error);
+    // On ne fait jamais échouer la navigation du visiteur pour un souci de tracking.
+    res.status(500).json({ error: 'Impossible d\'enregistrer la visite.' });
+  }
+});
+ 
+app.get('/api/visites', requireAdmin, async (req, res) => {
+  try {
+    const visites = await prisma.visite.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 1000,
+    });
+    res.json(visites);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible de récupérer les visites.' });
+  }
+});
+ 
+app.get('/api/visites/stats', requireAdmin, async (req, res) => {
+  try {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+ 
+    const [totalVisites, totalVisiteursUniques, visitesAujourdhui, visiteursUniquesAujourdhui] = await Promise.all([
+      prisma.visite.count(),
+      prisma.visite.groupBy({ by: ['visitorId'] }).then((rows) => rows.length),
+      prisma.visite.count({ where: { createdAt: { gte: startOfDay } } }),
+      prisma.visite
+        .groupBy({ by: ['visitorId'], where: { createdAt: { gte: startOfDay } } })
+        .then((rows) => rows.length),
+    ]);
+ 
+    res.json({
+      totalVisites,
+      totalVisiteursUniques,
+      visitesAujourdhui,
+      visiteursUniquesAujourdhui,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Impossible de récupérer les statistiques.' });
+  }
+});
 
 // ─── SERVER ────────────────────────────────────────────────
 

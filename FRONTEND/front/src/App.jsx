@@ -1,18 +1,21 @@
 import { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import './App.css';
 import LandingPage from './pages/LandingPage';
 import OrderFormPage from './pages/OrderFormPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import FloorPlanPage from './pages/admin/FloorPlanPage';
+import VisitesPage from './pages/admin/VisitesPage';
 import AdminLoginPage from './pages/admin/AdminLoginPage';
 import RequireAdminAuth from './components/admin/RequireAdminAuth';
 import DocumentTarificationPage from './pages/DocumentTarificationPage';
 import DocumentParticipationPage from './pages/DocumentParticipationPage';
 import PreviewDocumentsPage from './pages/PreviewDocumentsPage';
 import DepositDocumentsPage from './pages/DepositDocumentsPage';
+import { trackVisit } from './services/api';
 
 function App() {
+  const location = useLocation();
   useEffect(() => {
     const applyAutocomplete = () => {
       document.querySelectorAll('input').forEach((input) => {
@@ -28,7 +31,12 @@ function App() {
 
     return () => observer.disconnect();
   }, []);
-
+ // Tracking de visite à chaque changement de page (hors pages admin,
+  // pour ne pas polluer les stats avec l'activité de l'admin lui-même).
+  useEffect(() => {
+    if (location.pathname.startsWith('/admin')) return;
+    trackVisit(location.pathname);
+  }, [location.pathname]);
   return (
     <div className="app">
       <Routes>
@@ -41,6 +49,7 @@ function App() {
        <Route path="/admin/login" element={<AdminLoginPage />} />
 <Route path="/admin" element={<RequireAdminAuth><AdminDashboardPage /></RequireAdminAuth>} />
 <Route path="/admin/plan" element={<RequireAdminAuth><FloorPlanPage /></RequireAdminAuth>} />
+<Route path="/admin/visites" element={<RequireAdminAuth><VisitesPage /></RequireAdminAuth>} />
       </Routes>
     </div>
   );
