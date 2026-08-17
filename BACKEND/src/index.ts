@@ -97,7 +97,7 @@ app.post('/api/exposants', async (req, res) => {
           : data.selectedPackIds || data.packId || '',
           // Surface de chaque pack
         // Exemple :
-        // {"discover-fun":12,"sell-win":24}
+        // {"discover-fun":16,"sell-win":24}
         packSurfaces:
           typeof data.packSurfaces === 'string'
             ? data.packSurfaces

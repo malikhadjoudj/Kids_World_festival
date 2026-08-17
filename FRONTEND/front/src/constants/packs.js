@@ -6,7 +6,7 @@
 export const DROITS_INTERVENTION = 15000;
 export const TVA_RATE = 0.19;
 export const FORMULE_PACK_IDS = ['discover & fun', 'sell & win', 'pack-italie', 'pack-turquie', 'pack-algerie'];
-// Packs whose surface (12 m² / 24 m²) is chosen upfront, directly on the pack card
+// Packs whose surface (16 m² / 24 m²) is chosen upfront, directly on the pack card
 export const TIER_SURFACE_PACK_IDS = ['discover-fun', 'sell-win'];
 export const PACKS = [
   {
@@ -26,7 +26,7 @@ export const PACKS = [
       '3 chaises incluses',
     ],
     surfaceTiers: [
-      { surface: 12, price: 220000, priceLabel: '220 000 DA' },
+      { surface: 16, price: 220000, priceLabel: '220 000 DA' },
       { surface: 24, price: 380000, priceLabel: '380 000 DA' },
     ],
     popular: true,
@@ -48,7 +48,7 @@ export const PACKS = [
       '3 chaises incluses',
     ],
     surfaceTiers: [
-      { surface: 12, price: 220000, priceLabel: '220 000 DA' },
+      { surface: 16, price: 220000, priceLabel: '220 000 DA' },
       { surface: 24, price: 380000, priceLabel: '380 000 DA' },
     ],
     popular: false,
@@ -238,7 +238,7 @@ export const calculateSelectionPrices = (packIds, surfaces) => {
 };
 
 // ─── Surfaces map <-> URL query string helpers ───────────────────────────
-// Encodes as "discover-fun:12,sell-win:24" so it can travel in a URL param.
+// Encodes as "discover-fun:16,sell-win:24" so it can travel in a URL param.
 export const serializeSurfaces = (surfaces) => {
   if (!surfaces) return '';
   return Object.entries(surfaces)

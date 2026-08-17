@@ -54,7 +54,7 @@ function DocumentTarificationPage() {
       return;
     }
     // Safety net: a tier pack (Discover & Fun / Sell & Win) must already
-    // carry a valid 12/24 m² surface from the landing page. If it doesn't
+    // carry a valid 16/24 m² surface from the landing page. If it doesn't
     // (e.g. a hand-edited URL), send the person back to choose it there.
     const packs = getSelectedPacks(selected);
     const hasInvalidTierPack = packs.some((selectedPack) => {
