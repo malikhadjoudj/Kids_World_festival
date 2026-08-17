@@ -46,7 +46,7 @@
     "combineNote": "Sélectionnez le pack qui correspond à votre activité.",
     "droitsIntervention": "Droits d'intervention obligatoires :",
     "droitsSuffix": "DA, appliqués en sus de chaque offre.",
-    "pickSurfaceHint": "Choisissez 12 m² ou 24 m² ci-dessus"
+    "pickSurfaceHint": "Choisissez 16 m² ou 24 m² ci-dessus"
   },
   "footer": {
     "organizedBy": "Organisé par",
@@ -118,7 +118,7 @@
   "packsData": {
     "discover-fun": {
       "name": "PACK DISCOVER & FUN",
-      "surface": "12 m² ou 24 m² au choix",
+      "surface": "16 m² ou 24 m² au choix",
       "features": [
         "Surface couverte sous chapiteau",
         "Raccordement électrique",
@@ -128,7 +128,7 @@
     },
     "sell-win": {
       "name": "PACK SELL & WIN",
-      "surface": "12 m² ou 24 m² au choix",
+      "surface": "16 m² ou 24 m² au choix",
       "features": [
         "Surface couverte sous chapiteau",
         "Raccordement électrique",

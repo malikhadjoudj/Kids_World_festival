@@ -208,7 +208,7 @@ function DocumentTarificationPage() {
       ? (Number(packSurface) === 24 ? '380 000,00 DA' : '220 000,00 DA')
       : null;
     const tierSurfaceLabel = selectedPack.surfaceTiers
-      ? (packSurface ? `Surface sélectionnée : ${packSurface} m²` : 'Surface au choix : 12 m² ou 24 m²')
+      ? (packSurface ? `Surface sélectionnée : ${packSurface} m²` : 'Surface au choix : 16 m² ou 24 m²')
       : null;
 
     switch (selectedPack.id) {
