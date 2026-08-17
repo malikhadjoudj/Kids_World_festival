@@ -9,7 +9,7 @@ const initialPacks = [
     description: 'Exposition et animation — surface + électricité + 1 table + 3 chaises. Choix 12m² (220 000 DA) ou 24m² (380 000 DA).',
     price: 220000,
     perSquareMeter: false,
-    surface: '12m² ou 24m² au choix',
+    surface: '16m² ou 24m² au choix',
     icon: '🎪'
   },
    {
@@ -18,7 +18,7 @@ const initialPacks = [
     description: 'Vente — surface + électricité + 1 table + 3 chaises. Choix 12m² (220 000 DA) ou 24m² (380 000 DA).',
     price: 220000,
     perSquareMeter: false,
-    surface: '12m² ou 24m² au choix',
+    surface: '16m² ou 24m² au choix',
     icon: '🛍️'
   },
   {
