@@ -82,8 +82,12 @@ function DocumentTarificationPage() {
   };
   const lineItems = getPackLineItems(selectedPackIds, surfaces);
   const prices = calculateSelectionPrices(selectedPackIds, surfaces);
-  const needsManualSurface = manualSurfacePacks.length > 0;
-
+    const needsManualSurface = manualSurfacePacks.length > 0;
+  // Pack Algérie impose son propre minimum de 180 m² ; les autres packs à
+  // surface libre (Espace Nu) gardent le défaut générique de 9 m².
+  const surfaceConfigPack = manualSurfacePacks.find((selectedPack) => selectedPack.minSurface) || null;
+  const surfaceMin = surfaceConfigPack?.minSurface ?? 12;
+  const surfacePlaceholder = surfaceConfigPack?.surfacePlaceholder ?? 'Minimum 12 m²';
   const validateField = (name, value) => {
     const trimmed = String(value || '').trim();
 
@@ -164,9 +168,9 @@ function DocumentTarificationPage() {
       return;
     }
 
-    if (needsManualSurface && (!surface || Number.parseInt(surface, 10) < 9)) {
-      setValidationErrors((prev) => ({ ...prev, surface: 'Surface invalide (12 m² minimum).' }));
-      setSaveMessage('Veuillez indiquer une surface valide de 12 m2 minimum.');
+        if (needsManualSurface && (!surface || Number.parseInt(surface, 10) < surfaceMin)) {
+      setValidationErrors((prev) => ({ ...prev, surface: `Surface invalide (${surfaceMin} m² minimum).` }));
+      setSaveMessage(`Veuillez indiquer une surface valide de ${surfaceMin} m2 minimum.`);
       return;
     }
 
@@ -221,7 +225,7 @@ function DocumentTarificationPage() {
       case 'pack-turquie':
         return { title: 'PACK SPONSOR TURQUIE', price: '2 200 000,00 DA HT', desc: 'Grand format publicitaire, Pop-Up d’accueil, scène principale et deux créneaux d’animation.', surface: 'Espace d’exposition 150 m² + chapiteau 25 m²' };
       case 'pack-algerie':
-        return { title: 'PACK SPONSOR ALGÉRIE', price: '4 000 000,00 DA HT', desc: 'Branding exclusif, Pop-Up d’entrée, habillage des allées et présence sur la communication officielle.', surface: 'Activation premium' };
+        return { title: 'PACK SPONSOR ALGÉRIE', price: '4 000 000,00 DA HT', desc: 'Branding exclusif, Pop-Up d’entrée, habillage des allées et présence sur la communication officielle.', surface: packSurface ? `Surface sélectionnée : ${packSurface} m²` : 'Activation Premium — 180 m² et plus',};
       case 'espace-nu':
         return { title: 'OPTION', price: '', desc: 'Espace nu : 12 000 DA/m²', surface: '' };
       default:
@@ -414,7 +418,7 @@ function DocumentTarificationPage() {
               <input
                 className={`doc-field-input ${validationErrors.surface ? 'doc-field-input--error' : ''}`}
                 type="number"
-                min="9"
+                min={surfaceMin}
                 step="1"
                 value={surface}
                 onChange={(e) => {
@@ -422,7 +426,7 @@ function DocumentTarificationPage() {
                   setValidationErrors((prev) => ({ ...prev, surface: '' }));
                   setSaveMessage('');
                 }}
-                placeholder="Minimum 12 m²"
+                placeholder={surfacePlaceholder}
               />
               {validationErrors.surface && <p className="doc-field-error">{validationErrors.surface}</p>}
             </div>
